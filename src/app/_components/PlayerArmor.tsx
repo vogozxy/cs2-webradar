@@ -16,7 +16,7 @@ export default function PlayerArmor({
       path={`/assets/icons/${hasHelmet ? "kevlar_helmet" : "kevlar"}.svg`}
       width={20}
       height={20}
-      className="w-5 h-5"
+      className="h-5 w-5"
       alt={`${armor}`}
     />
   );

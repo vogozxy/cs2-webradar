@@ -18,7 +18,7 @@ export default function PlayerMisc({
           path={`/assets/icons/defuser.svg`}
           width={18}
           height={18}
-          className="w-5 h-5"
+          className="h-5 w-5"
           alt={"Defuse Kit"}
         />
       )}
@@ -27,7 +27,7 @@ export default function PlayerMisc({
           path={`/assets/icons/c4.svg`}
           width={18}
           height={18}
-          className="w-5 h-5"
+          className="h-5 w-5"
           alt={"C4"}
         />
       )}

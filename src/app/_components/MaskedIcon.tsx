@@ -5,7 +5,7 @@ export default function MaskedIcon({
   width,
   height,
   alt = "",
-  className = ""
+  className = "",
 }: {
   path: string;
   width: number;
@@ -13,5 +13,13 @@ export default function MaskedIcon({
   alt?: string;
   className?: string;
 }) {
-  return <Image src={path} alt={alt} width={width} height={height} className={className}/>;
+  return (
+    <Image
+      src={path}
+      alt={alt}
+      width={width}
+      height={height}
+      className={className}
+    />
+  );
 }

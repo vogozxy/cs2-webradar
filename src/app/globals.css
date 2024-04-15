@@ -17,11 +17,11 @@ body {
 } */
 
 body {
-  @apply bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200;
+  @apply bg-white text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200;
 }
 
 header {
-  @apply flex justify-center items-center gap-4 p-4;
+  @apply flex items-center justify-center gap-4 p-4;
 }
 
 .bg {
