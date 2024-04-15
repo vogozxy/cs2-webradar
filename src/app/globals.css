@@ -6,23 +6,34 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  /* padding: 0;
+  margin: 0; */
 }
 
-html,
+/* html,
 body {
   max-width: 100svw;
   overflow-x: hidden;
-}
+} */
 
 body {
-  background-color: hsl(0, 0%, 88%);
-  color: hsl(248, 15%, 11%);
+  @apply bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200;
 }
 
-@layer utilities {
+header {
+  @apply flex justify-center items-center gap-4 p-4;
+}
+
+.bg {
+  background-image: url(/assets/cs2.jpg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 165vh;
+  @apply shadow-light dark:shadow-dark;
+}
+
+/* @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */

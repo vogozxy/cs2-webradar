@@ -13,7 +13,7 @@ export default function PlayersInfo({
   otherPlayers: Player[] | undefined;
 }>) {
   return (
-    <section id={`${Team[currentTeam]}`}>
+    <section id={`${Team[currentTeam]}`} className="space-y-3 mb-1">
       <h1
         className={`lowercase ${currentTeam === Team.CounterTerrorist ? "text-[hsl(219,33%,52%)]" : "text-[hsl(36,72%,54%)]"}`}
         style={{ fontVariant: "small-caps" }}
