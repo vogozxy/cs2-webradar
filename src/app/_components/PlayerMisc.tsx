@@ -16,16 +16,18 @@ export default function PlayerMisc({
       {hasDefuser && (
         <MaskedIcon
           path={`/assets/icons/defuser.svg`}
-          width={20}
-          height={20}
+          width={18}
+          height={18}
+          className="w-5 h-5"
           alt={"Defuse Kit"}
         />
       )}
       {hasBomb && (
         <MaskedIcon
           path={`/assets/icons/c4.svg`}
-          width={20}
-          height={20}
+          width={18}
+          height={18}
+          className="w-5 h-5"
           alt={"C4"}
         />
       )}

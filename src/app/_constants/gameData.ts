@@ -56,7 +56,7 @@ export const GAME_DATA: GameData = {
       armor: 0,
       money: 800,
       position: {
-        y: -304.86291503906,
+        y: -104.86291503906,
         z: -164.81488037109,
         x: 1226.2635498047,
       },
