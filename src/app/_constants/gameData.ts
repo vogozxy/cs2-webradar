@@ -28,10 +28,10 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Pines",
       team: 2,
-      weapons: [59, 4],
+      weapons: [59, 4, 7, 46, 45, 44, 43],
       health: 100,
-      has_helmet: false,
-      armor: 0,
+      has_helmet: true,
+      armor: 90,
       money: 800,
       position: {
         y: -599.50244140625,
@@ -50,10 +50,10 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Dios",
       team: 2,
-      weapons: [59, 4, 49],
-      health: 100,
-      has_helmet: false,
-      armor: 0,
+      weapons: [59, 4, 49, 46, 45, 44],
+      health: 70,
+      has_helmet: true,
+      armor: 100,
       money: 800,
       position: {
         y: -104.86291503906,
@@ -72,7 +72,7 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Ulric",
       team: 3,
-      weapons: [42, 32],
+      weapons: [42, 32, 9, 48, 47, 45, 43],
       health: 100,
       has_helmet: false,
       armor: 0,
@@ -83,7 +83,7 @@ export const GAME_DATA: GameData = {
         x: -1510.6339111328,
       },
       color: 0,
-      has_defuser: false,
+      has_defuser: true,
       index: 4,
       view_angles: {
         y: -47.800140380859,
@@ -94,7 +94,7 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Telsen",
       team: 2,
-      weapons: [59, 4],
+      weapons: [59, 4, 39, 46, 45, 44, 43],
       health: 100,
       has_helmet: false,
       armor: 0,
@@ -116,7 +116,7 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Maru",
       team: 3,
-      weapons: [42, 32, 45, 47],
+      weapons: [42, 32, 45, 47, 16],
       health: 100,
       has_helmet: true,
       armor: 100,
@@ -138,10 +138,10 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Conleth",
       team: 3,
-      weapons: [42, 32],
+      weapons: [42, 32, 19, 48, 47, 45, 43],
       health: 100,
       has_helmet: false,
-      armor: 0,
+      armor: 100,
       money: 800,
       position: {
         y: -2203.4924316406,
@@ -160,10 +160,10 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Bassey",
       team: 2,
-      weapons: [59, 4],
+      weapons: [59, 4, 40, 46, 45, 44, 43],
       health: 100,
       has_helmet: false,
-      armor: 0,
+      armor: 100,
       money: 800,
       position: {
         y: -343.07080078125,
@@ -182,10 +182,10 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Azul",
       team: 2,
-      weapons: [59, 4],
+      weapons: [59, 4, 28, 46, 45, 44, 43],
       health: 100,
       has_helmet: false,
-      armor: 0,
+      armor: 100,
       money: 800,
       position: {
         y: -910.09680175781,
@@ -204,7 +204,7 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Clarence",
       team: 3,
-      weapons: [42, 32],
+      weapons: [42, 32, 25, 48, 47, 45, 43],
       health: 100,
       has_helmet: false,
       armor: 0,
