@@ -17,7 +17,7 @@ export default function BombPlantedStatus({
     case DefuseStatus.Defuseable:
       bombTimerColor = "text-green-600";
       break;
-      case DefuseStatus.DefuseWithKit:
+    case DefuseStatus.DefuseWithKit:
       bombTimerColor = "text-yellow-600";
       break;
     case DefuseStatus.NoTime:

@@ -27,7 +27,7 @@ export const GAME_DATA: GameData = {
   bomb: {
     is_defused: false,
     is_defusing: false,
-    defuse_time: 10.0000,
+    defuse_time: 10.0,
     position: {
       y: -131.0625,
       x: 1263.625,
