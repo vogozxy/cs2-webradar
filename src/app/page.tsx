@@ -6,21 +6,21 @@ import { Team } from "@/types/team";
 import { type GameData } from "@/types/gameData";
 import { type MapData } from "@/types/mapData";
 import type { Player } from "@/types/player";
+import type { BombPosition } from "@/types/bomb";
 
 import { GAME_DATA } from "@/constants/gameData";
 import { playerColors } from "@/constants/playerColors";
 
 import { isObjectEmpty } from "@/lib/isObjectEmpty";
-import {
-  getPlayerRadarPosition,
-  getPlayerViewDirection,
-  isPlayerHasBomb,
-} from "@/lib/player";
+import { getPlayerRadarPosition, getPlayerViewDirection } from "@/lib/player";
+import { getBombRadarPosition } from "@/lib/bomb";
 
 import { useInterval } from "@/hooks/useInterval";
 
 import PlayersInfo from "@/components/PlayersInfo";
 import ThemeSwitch from "@/components/ThemeSwitch";
+import BombPlantedStatus from "@/components/BombPlantedStatus";
+import BombDefuseStatus from "@/components/BombDefuseStatus";
 
 const resizeCanvasToDisplaySize = (canvas: HTMLCanvasElement) => {
   // look up the size the canvas is being displayed
@@ -32,6 +32,21 @@ const resizeCanvasToDisplaySize = (canvas: HTMLCanvasElement) => {
     canvas.width = width;
     canvas.height = height;
   }
+};
+
+const drawBombOnMap = (
+  context: CanvasRenderingContext2D,
+  bombPostion: BombPosition,
+  map: MapData
+) => {
+  const bombPos = getBombRadarPosition(bombPostion, map);
+  const x = bombPos.x;
+  const y = bombPos.y;
+
+  context.font = "bold 20px Poppins";
+  context.fillStyle = "#FFD700";
+  context.textAlign = "center";
+  context.fillText("C4", x, y);
 };
 
 const drawPlayerOnMap = (
@@ -78,17 +93,6 @@ const drawPlayerOnMap = (
     0,
     2 * Math.PI
   );
-
-  // Draw bomb carrier
-  if (isPlayerHasBomb(player.weapons)) {
-    const textX = playerPosition.x;
-    const textY = Math.round(playerPosition.y - dotSize - 3);
-
-    context.font = "18px Poppins bold";
-    context.fillStyle = color;
-    context.textAlign = "center";
-    context.fillText("C4", textX, textY);
-  }
 
   if (isTeammate) {
     if (radarTheme === "default") {
@@ -138,6 +142,7 @@ export default function Home() {
 
   const [gameData, setGameData] = useState<GameData>(null);
   const [currentMap, setCurrentMap] = useState<string>("");
+  const [isInMatch, setIsInMatch] = useState<boolean>(false);
   const [mapData, setMapData] = useState<MapData>(null);
   const [radarTheme, setRadarTheme] = useState<"default" | "classic">(
     "default"
@@ -152,20 +157,21 @@ export default function Home() {
     fetch("/api/webradar")
       .then((response) => response.json())
       .then((response) => {
-        const gameData =
+        const gameData: GameData =
           process.env.NEXT_PUBLIC_NODE_ENV === "production"
             ? response?.data?.gameData
             : GAME_DATA;
 
         setGameData(gameData);
         setCurrentMap(gameData?.map ?? "");
+        setIsInMatch(currentMap !== "" && currentMap !== "<empty>");
       });
   }, 50);
 
   // Handle map change
   useEffect(() => {
     // It will only fetch the map data if the map changes
-    if (!currentMap) return;
+    if (currentMap === "" || currentMap === "<empty>") return;
 
     const backgroundCanvas = backgroundCanvasRef.current;
     const mainCanvas = mainCanvasRef.current;
@@ -214,6 +220,9 @@ export default function Home() {
     mainCanvasContext.clearRect(0, 0, mapData.width, mapData.height);
 
     const currentTeam = gameData.local_player.team;
+
+    // Draw bomb
+    drawBombOnMap(mainCanvasContext, gameData.bomb.position, mapData);
 
     // Draw local player
     drawPlayerOnMap(
@@ -295,6 +304,22 @@ export default function Home() {
         </button>
         <ThemeSwitch />
       </header>
+
+      <div className="mx-4 my-2 flex items-center justify-center gap-4 rounded-lg bg-black/5 p-2 dark:bg-white/5">
+        <BombPlantedStatus
+          bombSite={gameData?.bomb.site ?? ""}
+          detonationTime={gameData?.bomb.detonation_time ?? 0}
+        />
+
+        <hr className="rounded border-4 border-gray-800 dark:border-white" />
+
+        <BombDefuseStatus
+          isDefusing={gameData?.bomb.is_defusing ?? false}
+          detonationTime={gameData?.bomb.detonation_time ?? 0}
+          defuseTime={gameData?.bomb.defuse_time ?? 0}
+        />
+      </div>
+
       <main className="flex min-h-[calc(100vh-72px)] flex-col-reverse justify-center px-4 pb-4 lg:flex-row lg:gap-4">
         <section
           id="players"
@@ -305,12 +330,14 @@ export default function Home() {
           }
         >
           <PlayersInfo
+            isInMatch={isInMatch}
             currentTeam={Team.CounterTerrorist}
             localPlayer={gameData?.local_player}
             otherPlayers={gameData?.players}
           />
 
           <PlayersInfo
+            isInMatch={isInMatch}
             currentTeam={Team.Terrorist}
             localPlayer={gameData?.local_player}
             otherPlayers={gameData?.players}
@@ -318,7 +345,7 @@ export default function Home() {
         </section>
 
         <section className="relative h-[calc(100vw-2rem-1px)] w-full rounded-lg bg-black/5 lg:h-auto dark:bg-white/5">
-          {currentMap == "" ? (
+          {!isInMatch ? (
             <div className="absolute flex h-full w-full items-center justify-center">
               <div className="text-center font-mono text-2xl">
                 <div className="bg-red-600 text-white">ATTENTION</div>

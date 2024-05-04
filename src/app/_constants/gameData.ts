@@ -24,6 +24,18 @@ export const GAME_DATA: GameData = {
     alive: true,
   },
   map: "de_mirage",
+  bomb: {
+    is_defused: false,
+    is_defusing: false,
+    defuse_time: 10.0000,
+    position: {
+      y: -131.0625,
+      x: 1263.625,
+    },
+    is_planted: true,
+    site: "B",
+    detonation_time: 39.0324,
+  },
   players: [
     {
       nickname: "Pines",

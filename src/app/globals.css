@@ -21,7 +21,7 @@ body {
 }
 
 header {
-  @apply flex items-center justify-center gap-4 p-4;
+  @apply flex items-center justify-center gap-4 pt-4 pb-1.5;
 }
 
 .bg {
