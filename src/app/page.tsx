@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useLocalStorage } from "usehooks-ts";
+import { useLocalStorage, useInterval } from "usehooks-ts";
 
 import { Team } from "@/types/team";
 import { type GameData } from "@/types/gameData";
@@ -15,8 +15,6 @@ import { playerColors } from "@/constants/playerColors";
 import { isObjectEmpty } from "@/lib/isObjectEmpty";
 import { getPlayerRadarPosition, getPlayerViewDirection } from "@/lib/player";
 import { getBombRadarPosition } from "@/lib/bomb";
-
-import { useInterval } from "@/hooks/useInterval";
 
 import PlayersInfo from "@/components/PlayersInfo";
 import ThemeSwitch from "@/components/ThemeSwitch";
@@ -146,7 +144,10 @@ export default function Home() {
   const [isInMatch, setIsInMatch] = useState<boolean>(false);
   const [mapData, setMapData] = useState<MapData>(null);
 
-  const [radarTheme, setRadarTheme] = useLocalStorage<"default" | "classic">("radar_theme", "default");
+  const [radarTheme, setRadarTheme] = useLocalStorage<"default" | "classic">(
+    "radar_theme",
+    "default"
+  );
 
   const handleRadarTheme = () => {
     setRadarTheme(radarTheme === "default" ? "classic" : "default");
