@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 import { Team } from "@/types/team";
 import { type GameData } from "@/types/gameData";
@@ -144,13 +145,16 @@ export default function Home() {
   const [currentMap, setCurrentMap] = useState<string>("");
   const [isInMatch, setIsInMatch] = useState<boolean>(false);
   const [mapData, setMapData] = useState<MapData>(null);
-  const [radarTheme, setRadarTheme] = useState<"default" | "classic">(
-    "default"
-  );
+
+  const [radarTheme, setRadarTheme] = useLocalStorage<"default" | "classic">("radar_theme", "default");
 
   const handleRadarTheme = () => {
     setRadarTheme(radarTheme === "default" ? "classic" : "default");
   };
+
+  useEffect(() => {
+    setRadarTheme(radarTheme);
+  }, [radarTheme, setRadarTheme]);
 
   // Fetch game data
   useInterval(() => {

@@ -1,12 +1,34 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useLocalStorage } from "usehooks-ts";
+
+const getDarkModePreference = () => {
+  const darkMode = localStorage.getItem("dark_mode");
+  const isDarkMode =
+    darkMode === "true" || darkMode === "false"
+      ? JSON.parse(darkMode)
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  return isDarkMode;
+};
 
 export default function ThemeSwitch() {
-  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [darkMode, setDarkMode] = useLocalStorage<boolean>("dark_mode", false);
 
   const handleDarkMode = () => {
-    document.body.classList.toggle("dark");
     setDarkMode(!darkMode);
   };
+
+  useEffect(() => {
+    setDarkMode(getDarkModePreference());
+  }, [setDarkMode]);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   return (
     <button
