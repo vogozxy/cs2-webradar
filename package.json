@@ -1,6 +1,6 @@
 {
-  "name": "fc-webradar",
-  "version": "0.1.0",
+  "name": "cs2-webradar",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "prod": "npm run build && npm run start",
