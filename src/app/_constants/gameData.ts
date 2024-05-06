@@ -40,7 +40,7 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Pines",
       team: 2,
-      weapons: [59, 4, 7, 46, 45, 44, 43],
+      weapons: [59, 4, 11, 46, 45, 44, 43],
       health: 100,
       has_helmet: true,
       armor: 90,
@@ -128,7 +128,7 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Maru",
       team: 3,
-      weapons: [42, 32, 45, 47, 16],
+      weapons: [42, 32, 45, 47, 38],
       health: 100,
       has_helmet: true,
       armor: 100,
@@ -150,7 +150,7 @@ export const GAME_DATA: GameData = {
     {
       nickname: "Conleth",
       team: 3,
-      weapons: [42, 32, 19, 48, 47, 45, 43],
+      weapons: [42, 32, 35, 48, 47, 45, 43],
       health: 100,
       has_helmet: false,
       armor: 100,

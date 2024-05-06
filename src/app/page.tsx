@@ -13,7 +13,11 @@ import { GAME_DATA } from "@/constants/gameData";
 import { playerColors } from "@/constants/playerColors";
 
 import { isObjectEmpty } from "@/lib/isObjectEmpty";
-import { getPlayerRadarPosition, getPlayerViewDirection } from "@/lib/player";
+import {
+  getPlayerRadarPosition,
+  getPlayerViewDirection,
+  playerHasImportantWeapons,
+} from "@/lib/player";
 import { getBombRadarPosition } from "@/lib/bomb";
 
 import PlayersInfo from "@/components/PlayersInfo";
@@ -105,6 +109,16 @@ const drawPlayerOnMap = (
     context.fillStyle = color;
     context.fill();
   }
+
+  // Display important weapons on map
+  context.font = "12px Poppins";
+  context.fillStyle = "#FFFFE0";
+  context.textAlign = "center";
+  context.fillText(
+    playerHasImportantWeapons(player.weapons),
+    playerPosition.x,
+    playerPosition.y + dotSize * 3
+  );
 };
 
 const changeMapBackground = (

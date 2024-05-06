@@ -23,6 +23,29 @@ export const isPlayerHasBomb = (weapons: number[]) => {
   return weapons.includes(Misc.C4);
 };
 
+export const playerHasImportantWeapons = (weapons: number[]): string => {
+  const importantWeapons = [
+    PrimaryWeapon.AWP,
+    PrimaryWeapon.G3SG1,
+    PrimaryWeapon.SCAR20,
+    PrimaryWeapon.SSG08,
+    PrimaryWeapon.SawedOff,
+    PrimaryWeapon.MAG7,
+    PrimaryWeapon.Nova,
+    PrimaryWeapon.XM1014,
+  ];
+
+  const playerImportantWeapon = weapons.find((weapon) =>
+    importantWeapons.includes(weapon)
+  );
+
+  if (!playerImportantWeapon) {
+    return "";
+  }
+
+  return PrimaryWeapon[playerImportantWeapon];
+};
+
 export const getPlayerRadarPosition = (
   playerPosition: PlayerPosition,
   map: MapData
