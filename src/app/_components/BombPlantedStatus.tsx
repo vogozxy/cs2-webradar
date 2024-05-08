@@ -32,9 +32,10 @@ export default function BombPlantedStatus({
   return (
     <section className="inline-flex gap-1">
       <MaskedIcon
-        path="/assets/icons/c4_small.png"
+        path="/assets/icons/c4-planted.svg"
         width={26}
         height={26}
+        className="brightness-[0.25] dark:brightness-100"
         alt="C4"
       />
       <span className="font-medium">{bombSite || "N/A"}</span>

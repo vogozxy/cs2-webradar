@@ -46,6 +46,7 @@ const drawBombOnMap = (
   const x = bombPos.x;
   const y = bombPos.y;
 
+  context.beginPath();
   context.font = "bold 20px Poppins";
   context.fillStyle = "#FFD700";
   context.textAlign = "center";
@@ -72,6 +73,7 @@ const drawPlayerOnMap = (
 
   // Calculate player position on radar
   const playerPosition = getPlayerRadarPosition(player.position, map);
+  if (!playerPosition.x || !playerPosition.y) return;
 
   // Calculate view direction
   const playerViewDirection = getPlayerViewDirection(
@@ -188,10 +190,8 @@ export default function Home() {
   }, 50);
 
   // Handle map change
+  // It will only fetch the map data if the map changes
   useEffect(() => {
-    // It will only fetch the map data if the map changes
-    if (currentMap === "" || currentMap === "<empty>") return;
-
     const backgroundCanvas = backgroundCanvasRef.current;
     const mainCanvas = mainCanvasRef.current;
     if (!backgroundCanvas || !mainCanvas) return;
@@ -201,9 +201,15 @@ export default function Home() {
     if (!backgroundCanvasContext || !mainCanvasContext) return;
 
     mainCanvasContext.reset();
+    backgroundCanvasContext.reset();
 
     resizeCanvasToDisplaySize(backgroundCanvas);
     resizeCanvasToDisplaySize(mainCanvas);
+
+    if (currentMap === "" || currentMap === "<empty>") {
+      backgroundCanvasContext.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+      return;
+    };
 
     changeMapBackground(
       currentMap,
