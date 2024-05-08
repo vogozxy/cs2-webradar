@@ -2,7 +2,7 @@
 
 ![Webradar Preview](./docs/gif/webradar-dark.gif?raw=true)
 
-Supported maps: `dust2, inferno, mirage, overpass`.
+Supported maps: `ancient, anubis, dust2, inferno, mirage, overpass`.
 
 ## Getting Started
 
