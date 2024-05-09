@@ -61,6 +61,7 @@ const drawPlayerOnMap = (
   currentTeam: Team
 ) => {
   if (!player.alive) return;
+  if (!player.position.x || !player.position.y) return;
 
   const dotSize = 6;
   const isTeammate = player.team === currentTeam;
@@ -73,7 +74,6 @@ const drawPlayerOnMap = (
 
   // Calculate player position on radar
   const playerPosition = getPlayerRadarPosition(player.position, map);
-  if (!playerPosition.x || !playerPosition.y) return;
 
   // Calculate view direction
   const playerViewDirection = getPlayerViewDirection(
@@ -207,9 +207,15 @@ export default function Home() {
     resizeCanvasToDisplaySize(mainCanvas);
 
     if (currentMap === "" || currentMap === "<empty>") {
-      backgroundCanvasContext.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+      mainCanvasContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+      backgroundCanvasContext.clearRect(
+        0,
+        0,
+        backgroundCanvas.width,
+        backgroundCanvas.height
+      );
       return;
-    };
+    }
 
     changeMapBackground(
       currentMap,
@@ -290,6 +296,10 @@ export default function Home() {
       setCurrentMap("");
     };
     window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
