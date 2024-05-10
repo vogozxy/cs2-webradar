@@ -191,7 +191,7 @@ export default function Home() {
     };
 
     eventSource.onmessage = (event: MessageEvent) => {
-      const gameData: GameData = JSON.parse(event.data);
+      const gameData: GameData = JSON.parse(event?.data ?? null);
 
       setGameData(gameData);
       setCurrentMap(gameData?.map ?? "");
