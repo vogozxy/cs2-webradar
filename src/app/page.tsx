@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLocalStorage, useInterval } from "usehooks-ts";
 
 import { Team } from "@/types/team";
@@ -173,21 +173,53 @@ export default function Home() {
     setRadarTheme(radarTheme);
   }, [radarTheme, setRadarTheme]);
 
-  // Fetch game data
-  useInterval(() => {
-    fetch("/api/webradar")
-      .then((response) => response.json())
-      .then((response) => {
-        const gameData: GameData =
-          process.env.NEXT_PUBLIC_NODE_ENV === "production"
-            ? response?.data?.gameData
-            : GAME_DATA;
+  const connectToSSE = useCallback(() => {
+    if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      const gameData: GameData = GAME_DATA;
+      setGameData(gameData);
+      setCurrentMap(gameData?.map ?? "");
+      setIsInMatch(gameData?.map !== "" && gameData?.map !== "<empty>");
+      return;
+    }
 
-        setGameData(gameData);
-        setCurrentMap(gameData?.map ?? "");
-        setIsInMatch(currentMap !== "" && currentMap !== "<empty>");
-      });
-  }, 50);
+    const eventSource = new EventSource(
+      `${process.env.NEXT_PUBLIC_WEBRADAR_SSE_URL}`
+    );
+
+    eventSource.onopen = (event: Event) => {
+      console.info("SSE connection has been established.");
+    };
+
+    eventSource.onmessage = (event: MessageEvent) => {
+      const gameData: GameData = JSON.parse(event.data);
+
+      setGameData(gameData);
+      setCurrentMap(gameData?.map ?? "");
+      setIsInMatch(gameData?.map !== "" && gameData?.map !== "<empty>");
+    };
+
+    eventSource.onerror = (event: Event) => {
+      eventSource.close();
+      console.error("SSE Error!", event);
+
+      setGameData(null);
+      setCurrentMap("");
+      setIsInMatch(false);
+
+      setTimeout(connectToSSE, 1);
+    };
+
+    return eventSource;
+  }, []);
+
+  // Fetch game data
+  useEffect(() => {
+    const eventSource = connectToSSE();
+
+    return () => {
+      eventSource?.close();
+    };
+  }, [connectToSSE]);
 
   // Handle map change
   // It will only fetch the map data if the map changes
