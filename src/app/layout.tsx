@@ -8,8 +8,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "FC Webradar",
-  description: "FC Webradar",
+  title: "CS2 Webradar",
+  description: "CS2 Webradar",
 };
 
 export default function RootLayout({
