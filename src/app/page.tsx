@@ -206,7 +206,7 @@ export default function Home() {
       setCurrentMap("");
       setIsInMatch(false);
 
-      setTimeout(connectToSSE, 1);
+      setTimeout(connectToSSE, 50);
     };
 
     return eventSource;
