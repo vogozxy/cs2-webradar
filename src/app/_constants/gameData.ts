@@ -26,7 +26,7 @@ export const GAME_DATA: GameData = {
   map: "de_mirage",
   bomb: {
     is_defused: false,
-    is_defusing: false,
+    is_defusing: true,
     defuse_time: 10.0,
     position: {
       y: -131.0625,

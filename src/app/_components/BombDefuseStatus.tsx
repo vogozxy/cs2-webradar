@@ -17,8 +17,8 @@ export default function BombDefuseStatus({
 
   return (
     <section className="inline-flex gap-1">
-      <span className={`font-medium`}>
-        {isDefusing ? "Defusing" : "Not Defusing"}
+      <span className={`font-medium ${isDefusing ? "text-blue-500" : ""}`}>
+        {isDefusing ? "Defusing..." : "Not Defusing"}
       </span>
       <span className={bombDefuseableColor}>
         ({isDefusing ? defuseTime.toFixed(2) : "0.00"})
