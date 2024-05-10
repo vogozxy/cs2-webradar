@@ -8,7 +8,9 @@ export default function PlayerArmor({
   hasHelmet: boolean;
 }) {
   if (armor <= 0) {
-    return <div className="flex h-6 w-6 shrink-0 list-none items-center justify-center rounded-md bg-black/10 text-center dark:bg-white/5"></div>;
+    return (
+      <div className="flex h-6 w-6 shrink-0 list-none items-center justify-center rounded-md bg-black/10 text-center dark:bg-white/5"></div>
+    );
   }
 
   return (

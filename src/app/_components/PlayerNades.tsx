@@ -22,7 +22,7 @@ const Nade = ({ nade }: { nade?: number }) => {
 
 export default function PlayerNades({ nades }: { nades: number[] }) {
   return (
-    <ul data-nades={nades} className="flex justify-end md:justify-normal gap-1">
+    <ul data-nades={nades} className="flex justify-end gap-1 md:justify-normal">
       {nades.length ? (
         [...Array(4)].map((x, i) => <Nade key={i} nade={nades[i]} />)
       ) : (

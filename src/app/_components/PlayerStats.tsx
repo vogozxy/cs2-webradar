@@ -35,19 +35,19 @@ export default function PlayerStats({
         ></div>
 
         <span className="relative px-2 py-1">{health}</span>
-        <span className="relative px-2 py-1 truncate">
+        <span className="relative truncate px-2 py-1">
           <span style={{ color: playerColors[color] }}>&#x25cf;</span>{" "}
           {nickname}
         </span>
         <PlayerPrimaryWeapon weapon={getPrimaryWeapon(weapons)} />
       </div>
 
-      <div className="grid w-full grid-cols-2 sm:grid-cols-4 items-center justify-between gap-2 px-2 py-1">
+      <div className="grid w-full grid-cols-2 items-center justify-between gap-2 px-2 py-1 sm:grid-cols-4">
         <span data-money={money} className="text-green-500">
           ${money}
         </span>
         <PlayerNades nades={getNades(weapons)} />
-        <div className="flex items-center justify-between col-span-2 flex-row-reverse sm:flex-row">
+        <div className="col-span-2 flex flex-row-reverse items-center justify-between sm:flex-row">
           <div className="flex gap-2 brightness-[0.25] dark:brightness-100">
             <PlayerArmor armor={armor} hasHelmet={hasHelmet} />
             <PlayerMisc
