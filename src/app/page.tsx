@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useLocalStorage, useInterval } from "usehooks-ts";
+import { useLocalStorage } from "usehooks-ts";
 
 import { Team } from "@/types/team";
 import { type GameData } from "@/types/gameData";
@@ -150,10 +150,23 @@ const changeMapBackground = (
   };
 };
 
+const getRadarThemePreference = () => {
+  const radarThemePreference =
+    window.localStorage.getItem("radar_theme")?.replace(/"/g, "") ?? "default";
+
+  const radarTheme =
+    radarThemePreference === "default" || radarThemePreference === "classic"
+      ? radarThemePreference
+      : "default";
+
+  return radarTheme;
+};
+
 export default function Home() {
   const mainCanvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
   const radarRef = useRef<HTMLDivElement>(null);
+  const radarThemeRef = useRef<HTMLDivElement>(null);
 
   const [gameData, setGameData] = useState<GameData>(null);
   const [currentMap, setCurrentMap] = useState<string>("");
@@ -167,10 +180,15 @@ export default function Home() {
 
   const handleRadarTheme = () => {
     setRadarTheme(radarTheme === "default" ? "classic" : "default");
+    radarThemeRef.current?.setAttribute(
+      "data-radar-theme",
+      getRadarThemePreference()
+    );
   };
 
   useEffect(() => {
-    setRadarTheme(radarTheme);
+    setRadarTheme(getRadarThemePreference());
+    radarThemeRef.current?.setAttribute("data-radar-theme", radarTheme);
   }, [radarTheme, setRadarTheme]);
 
   const connectToSSE = useCallback(() => {
@@ -342,10 +360,8 @@ export default function Home() {
           className="h-10 w-10 overflow-hidden rounded-lg bg-black/5 p-2 dark:bg-white/5"
         >
           <div
-            className={
-              (radarTheme === "default" ? "translate-y-0" : "-translate-y-8") +
-              " transform transition duration-200 ease-in-out"
-            }
+            ref={radarThemeRef}
+            className="transform transition duration-200 ease-in-out data-radar-theme-default:translate-y-0 data-radar-theme-classic:-translate-y-8"
           >
             <svg className="mb-2 h-6 w-6" viewBox="0 0 24 24" fill="none">
               <path

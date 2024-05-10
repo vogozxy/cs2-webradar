@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
 const getDarkModePreference = () => {
-  const darkMode = localStorage.getItem("dark_mode");
+  const darkMode = window.localStorage.getItem("dark_mode");
   const isDarkMode =
     darkMode === "true" || darkMode === "false"
       ? JSON.parse(darkMode)
