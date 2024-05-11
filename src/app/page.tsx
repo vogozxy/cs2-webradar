@@ -196,7 +196,11 @@ export default function Home() {
       const gameData: GameData = GAME_DATA;
       setGameData(gameData);
       setCurrentMap(gameData?.map ?? "");
-      setIsInMatch(gameData?.map !== "" && gameData?.map !== "<empty>");
+      setIsInMatch(
+        (gameData?.map ?? null) !== null &&
+          gameData?.map !== "" &&
+          gameData?.map !== "<empty>"
+      );
       return;
     }
 
@@ -213,7 +217,11 @@ export default function Home() {
 
       setGameData(gameData);
       setCurrentMap(gameData?.map ?? "");
-      setIsInMatch(gameData?.map !== "" && gameData?.map !== "<empty>");
+      setIsInMatch(
+        (gameData?.map ?? null) !== null &&
+          gameData?.map !== "" &&
+          gameData?.map !== "<empty>"
+      );
     };
 
     eventSource.onerror = (event: Event) => {
