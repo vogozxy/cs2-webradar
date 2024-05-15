@@ -14,7 +14,6 @@ export type Bomb = {
   is_planted: boolean;
   site: "A" | "B" | "";
   detonation_time: number;
-  is_defused: boolean;
   is_defusing: boolean;
   defuse_time: number;
 };
