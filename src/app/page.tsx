@@ -32,9 +32,13 @@ const drawBombOnMap = (
 ) => {
   const bombPos = getBombRadarPosition(bombPostion, map);
 
-  // Offset bomb y position if playing on two-level map
-  if (map?.z_cutoff && bombPos.z < map.z_cutoff) {
-    bombPos.y += map.height / 2;
+  // Offset position if playing on two-level map
+  if (map?.z_cutoff) {
+    bombPos.x += map.width / 4;
+
+    if (bombPos.z < map.z_cutoff) {
+      bombPos.y += map.height / 2;
+    }
   }
 
   context.beginPath();
@@ -66,9 +70,13 @@ const drawPlayerOnMap = (
   // Calculate player position on radar
   const playerPosition = getPlayerRadarPosition(player.position, map);
 
-  // Offset player y position if playing on two-level map
-  if (map?.z_cutoff && playerPosition.z < map.z_cutoff) {
-    playerPosition.y += map.height / 2;
+  // Offset position if playing on two-level map
+  if (map?.z_cutoff) {
+    playerPosition.x += map.width / 4;
+
+    if (playerPosition.z < map.z_cutoff) {
+      playerPosition.y += map.height / 2;
+    }
   }
 
   // Calculate view direction
@@ -142,10 +150,8 @@ const changeMapBackground = (
     // Calculate the position to center the image on the canvas
     // const offsetX = (width - newWidth) / 2;
     // const offsetY = (height - newHeight) / 2;
-    const offsetX = 0;
-    const offsetY = 0;
 
-    context.drawImage(image, offsetX, offsetY, newWidth, newHeight);
+    context.drawImage(image, 0, 0, newWidth, newHeight);
   };
 };
 
@@ -192,7 +198,7 @@ export default function Home() {
 
   const connectToSSE = useCallback(() => {
     if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
-      const gameData: GameData = GAME_DATA;
+      const gameData: GameData = GAME_DATA.de_mirage;
       setGameData(gameData);
       setCurrentMap(gameData?.map ?? "");
       setIsInMatch(
