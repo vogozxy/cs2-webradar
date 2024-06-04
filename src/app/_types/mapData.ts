@@ -6,4 +6,5 @@ export type MapData = {
   height: number;
   rotate?: number;
   zoom?: number;
+  z_cutoff?: number;
 } | null;

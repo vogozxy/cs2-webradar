@@ -57,7 +57,7 @@ export const getPlayerRadarPosition = (
   return {
     x: (playerPosition.x - map.pos_x) / map.scale,
     y: (playerPosition.y - map.pos_y) / -map.scale,
-    z: 0,
+    z: playerPosition.z,
   };
 };
 

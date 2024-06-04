@@ -5,13 +5,14 @@ export const getBombRadarPosition = (
   bombPosition: BombPosition,
   map: MapData
 ): BombPosition => {
-  if (!bombPosition || !map) return { x: 0, y: 0 };
-  if (!bombPosition.x || !bombPosition.y) return { x: 0, y: 0 };
-  if (!map.pos_x || !map.pos_y || !map.scale) return { x: 0, y: 0 };
+  if (!bombPosition || !map) return { x: 0, y: 0, z: 0 };
+  if (!bombPosition.x || !bombPosition.y) return { x: 0, y: 0, z: 0 };
+  if (!map.pos_x || !map.pos_y || !map.scale) return { x: 0, y: 0, z: 0 };
 
   return {
     x: (bombPosition.x - map.pos_x) / map.scale,
     y: (bombPosition.y - map.pos_y) / -map.scale,
+    z: bombPosition.z,
   };
 };
 

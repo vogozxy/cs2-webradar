@@ -7,6 +7,7 @@ export enum DefuseStatus {
 export type BombPosition = {
   x: number;
   y: number;
+  z: number;
 };
 
 export type Bomb = {

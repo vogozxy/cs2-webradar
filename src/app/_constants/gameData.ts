@@ -30,6 +30,7 @@ export const GAME_DATA: GameData = {
     position: {
       y: -131.0625,
       x: 1263.625,
+      z: 0,
     },
     is_planted: true,
     site: "B",

@@ -25,32 +25,23 @@ import ThemeSwitch from "@/components/ThemeSwitch";
 import BombPlantedStatus from "@/components/BombPlantedStatus";
 import BombDefuseStatus from "@/components/BombDefuseStatus";
 
-const resizeCanvasToDisplaySize = (canvas: HTMLCanvasElement) => {
-  // look up the size the canvas is being displayed
-  const width = canvas.parentElement?.clientHeight || canvas.clientHeight;
-  const height = canvas.parentElement?.clientHeight || canvas.clientHeight;
-
-  // If it's resolution does not match change it
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-  }
-};
-
 const drawBombOnMap = (
   context: CanvasRenderingContext2D,
   bombPostion: BombPosition,
   map: MapData
 ) => {
   const bombPos = getBombRadarPosition(bombPostion, map);
-  const x = bombPos.x;
-  const y = bombPos.y;
+
+  // Offset bomb y position if playing on two-level map
+  if (map?.z_cutoff && bombPos.z < map.z_cutoff) {
+    bombPos.y += map.height / 2;
+  }
 
   context.beginPath();
   context.font = "bold 20px Poppins";
   context.fillStyle = "#FFD700";
   context.textAlign = "center";
-  context.fillText("C4", x, y);
+  context.fillText("C4", bombPos.x, bombPos.y);
 };
 
 const drawPlayerOnMap = (
@@ -74,6 +65,11 @@ const drawPlayerOnMap = (
 
   // Calculate player position on radar
   const playerPosition = getPlayerRadarPosition(player.position, map);
+
+  // Offset player y position if playing on two-level map
+  if (map?.z_cutoff && playerPosition.z < map.z_cutoff) {
+    playerPosition.y += map.height / 2;
+  }
 
   // Calculate view direction
   const playerViewDirection = getPlayerViewDirection(
@@ -113,6 +109,7 @@ const drawPlayerOnMap = (
   }
 
   // Display important weapons on map
+  context.beginPath();
   context.font = "12px Poppins";
   context.fillStyle = "#FFFFE0";
   context.textAlign = "center";
@@ -125,28 +122,30 @@ const drawPlayerOnMap = (
 
 const changeMapBackground = (
   currentMapName: string,
-  context: CanvasRenderingContext2D,
-  width: number,
-  height: number
+  context: CanvasRenderingContext2D
 ) => {
-  context.clearRect(0, 0, width, height);
+  context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
   const image = new Image();
   image.src = `/maps/${currentMapName}/radar.png`;
   image.onload = () => {
     // Calculate the scale to fit the image on the canvas
-    const scale = Math.min(width / image.width, height / image.height);
+    const scale = Math.min(
+      context.canvas.width / image.width,
+      context.canvas.height / image.height
+    );
 
     // Calculate the new width and height of the image
     const newWidth = image.width * scale;
     const newHeight = image.height * scale;
 
     // Calculate the position to center the image on the canvas
-    // const x = (width - newWidth) / 2;
-    // const y = (height - newHeight) / 2;
+    // const offsetX = (width - newWidth) / 2;
+    // const offsetY = (height - newHeight) / 2;
+    const offsetX = 0;
+    const offsetY = 0;
 
-    context.drawImage(image, 0, 0, newWidth, newHeight);
-    // context.drawImage(image, 0, 0);
+    context.drawImage(image, offsetX, offsetY, newWidth, newHeight);
   };
 };
 
@@ -261,9 +260,6 @@ export default function Home() {
     mainCanvasContext.reset();
     backgroundCanvasContext.reset();
 
-    resizeCanvasToDisplaySize(backgroundCanvas);
-    resizeCanvasToDisplaySize(mainCanvas);
-
     if (currentMap === "" || currentMap === "<empty>") {
       mainCanvasContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
       backgroundCanvasContext.clearRect(
@@ -275,22 +271,20 @@ export default function Home() {
       return;
     }
 
-    changeMapBackground(
-      currentMap,
-      backgroundCanvasContext,
-      backgroundCanvas.width,
-      backgroundCanvas.height
-    );
+    changeMapBackground(currentMap, backgroundCanvasContext);
 
     fetch(`/maps/${currentMap}/data.json`)
       .then((response) => response.json())
       .then((data) => {
         mainCanvasContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+
         const scale = Math.min(
           mainCanvas.width / data.width,
           mainCanvas.height / data.height
         );
+
         mainCanvasContext.scale(scale, scale);
+
         setMapData(data);
       });
   }, [currentMap]);
@@ -335,6 +329,42 @@ export default function Home() {
   });
 
   useEffect(() => {
+    const backgroundCanvas = backgroundCanvasRef.current;
+    const mainCanvas = mainCanvasRef.current;
+    if (!backgroundCanvas || !mainCanvas) return;
+
+    const resizeCanvas = () => {
+      const mainCanvasWidth =
+        mainCanvas.parentElement?.clientHeight || mainCanvas.clientHeight;
+      const mainCanvasHeight =
+        mainCanvas.parentElement?.clientHeight || mainCanvas.clientHeight;
+
+      if (
+        mainCanvas.width !== mainCanvasWidth ||
+        mainCanvas.height !== mainCanvasHeight
+      ) {
+        mainCanvas.width = mainCanvasWidth;
+        mainCanvas.height = mainCanvasHeight;
+      }
+
+      const backgroundCanvasWidth =
+        backgroundCanvas.parentElement?.clientHeight ||
+        backgroundCanvas.clientHeight;
+      const backgroundCanvasHeight =
+        backgroundCanvas.parentElement?.clientHeight ||
+        backgroundCanvas.clientHeight;
+
+      if (
+        backgroundCanvas.width !== backgroundCanvasWidth ||
+        backgroundCanvas.height !== backgroundCanvasHeight
+      ) {
+        backgroundCanvas.width = backgroundCanvasWidth;
+        backgroundCanvas.height = backgroundCanvasHeight;
+      }
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
     let timer: ReturnType<typeof setTimeout>;
     const radar = radarRef.current;
 
@@ -356,6 +386,7 @@ export default function Home() {
     window.addEventListener("resize", handleResize);
 
     return () => {
+      window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
