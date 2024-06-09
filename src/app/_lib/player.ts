@@ -1,50 +1,5 @@
 import type { MapData } from "@/types/mapData";
-import { PrimaryWeapon, SecondaryWeapon, Grenade, Misc } from "@/types/weapon";
-import type { Player, PlayerPosition, PlayerViewAngles } from "@/types/player";
-
-export const getPrimaryWeapon = (weapons: number[]) => {
-  return (
-    weapons.find((weapon) => Object.values(PrimaryWeapon).includes(weapon)) ?? 0
-  );
-};
-
-export const getSecondaryWeapon = (weapons: number[]) => {
-  return (
-    weapons.find((weapon) => Object.values(SecondaryWeapon).includes(weapon)) ??
-    0
-  );
-};
-
-export const getNades = (weapons: number[]) => {
-  return weapons.filter((weapon) => Object.values(Grenade).includes(weapon));
-};
-
-export const isPlayerHasBomb = (weapons: number[]) => {
-  return weapons.includes(Misc.C4);
-};
-
-export const playerHasImportantWeapons = (weapons: number[]): string => {
-  const importantWeapons = [
-    PrimaryWeapon.AWP,
-    PrimaryWeapon.G3SG1,
-    PrimaryWeapon.SCAR20,
-    PrimaryWeapon.SSG08,
-    PrimaryWeapon.SawedOff,
-    PrimaryWeapon.MAG7,
-    PrimaryWeapon.Nova,
-    PrimaryWeapon.XM1014,
-  ];
-
-  const playerImportantWeapon = weapons.find((weapon) =>
-    importantWeapons.includes(weapon)
-  );
-
-  if (!playerImportantWeapon) {
-    return "";
-  }
-
-  return PrimaryWeapon[playerImportantWeapon];
-};
+import type { PlayerPosition, PlayerViewAngles } from "@/types/player";
 
 export const getPlayerRadarPosition = (
   playerPosition: PlayerPosition,
@@ -64,7 +19,7 @@ export const getPlayerRadarPosition = (
 export const getPlayerViewDirection = (
   playerPosition: PlayerPosition,
   playerViewAngles: PlayerViewAngles,
-  viewAngleLength: number = 20
+  viewAngleLength: number
 ) => {
   if (!playerViewAngles) return { x: playerPosition.x, y: playerPosition.y };
   if (!playerViewAngles.y) return { x: playerPosition.x, y: playerPosition.y };

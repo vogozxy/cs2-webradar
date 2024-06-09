@@ -1,19 +1,31 @@
 import { Team } from "@/types/team";
 
-import { playerColors } from "@/constants/playerColors";
+import { PLAYER_COLORS } from "@/constants/player";
 
 import {
   getPrimaryWeapon,
   getSecondaryWeapon,
   getNades,
-  isPlayerHasBomb,
-} from "@/lib/player";
+  playerHasBomb,
+} from "@/lib/weapon";
 
-import PlayerPrimaryWeapon from "@/components/PlayerPrimaryWeapon";
-import PlayerSecondaryWeapon from "@/components/PlayerSecondaryWeapon";
-import PlayerArmor from "@/components/PlayerArmor";
-import PlayerNades from "@/components/PlayerNades";
-import PlayerMisc from "@/components/PlayerMisc";
+import PlayerPrimaryWeapon from "./PlayerPrimaryWeapon";
+import PlayerSecondaryWeapon from "./PlayerSecondaryWeapon";
+import PlayerArmor from "./PlayerArmor";
+import PlayerNades from "./PlayerNades";
+import PlayerMisc from "./PlayerMisc";
+
+type PlayerStatsProps = {
+  color: number;
+  nickname: string;
+  team: Team;
+  health: number;
+  armor: number;
+  hasHelmet: boolean;
+  money: number;
+  weapons: number[];
+  hasDefuser: boolean;
+};
 
 export default function PlayerStats({
   color,
@@ -25,7 +37,7 @@ export default function PlayerStats({
   money,
   weapons,
   hasDefuser,
-}: any) {
+}: PlayerStatsProps) {
   return (
     <div className="overflow-hidden rounded-md bg-black/5 text-zinc-800 dark:bg-white/5 dark:text-white">
       <div className="relative grid w-full grid-cols-3 items-center justify-between bg-black/20 text-white dark:bg-white/5">
@@ -36,7 +48,7 @@ export default function PlayerStats({
 
         <span className="relative px-2 py-1">{health}</span>
         <span className="relative truncate px-2 py-1">
-          <span style={{ color: playerColors[color] }}>&#x25cf;</span>{" "}
+          <span style={{ color: PLAYER_COLORS[color] }}>&#x25cf;</span>{" "}
           {nickname}
         </span>
         <PlayerPrimaryWeapon weapon={getPrimaryWeapon(weapons)} />
@@ -52,7 +64,7 @@ export default function PlayerStats({
             <PlayerArmor armor={armor} hasHelmet={hasHelmet} />
             <PlayerMisc
               hasDefuser={hasDefuser}
-              hasBomb={isPlayerHasBomb(weapons)}
+              hasBomb={playerHasBomb(weapons)}
             />
           </div>
           <PlayerSecondaryWeapon weapon={getSecondaryWeapon(weapons)} />

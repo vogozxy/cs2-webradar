@@ -21,10 +21,11 @@ export enum PrimaryWeapon {
   MAG7 = 27,
   Negev = 28,
   SawedOff = 29,
-  Zeus = 31,
   MP7 = 33,
   MP9 = 34,
   Nova = 35,
+
+  // Zeus = 31,
 }
 
 export enum SecondaryWeapon {

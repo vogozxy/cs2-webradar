@@ -12,13 +12,12 @@
     "format:check": "prettier --check ./src"
   },
   "dependencies": {
-    "http-status-codes": "^2.3.0",
     "next": "14.2.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-select": "^5.8.0",
     "sharp": "^0.33.3",
-    "usehooks-ts": "^3.1.0",
-    "winston": "^3.13.0"
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",

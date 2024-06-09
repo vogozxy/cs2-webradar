@@ -1,4 +1,4 @@
-export const playerColors = [
+export const PLAYER_COLORS = [
   // blue
   "#84c8ed",
 

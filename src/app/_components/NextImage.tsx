@@ -1,25 +1,25 @@
 import Image from "next/image";
 
-export default function MaskedIcon({
-  path,
+export default function NextImage({
+  src,
   width,
   height,
+  className,
   alt = "",
-  className = "",
 }: {
-  path: string;
+  src: string;
   width: number;
   height: number;
-  alt?: string;
   className?: string;
+  alt?: string;
 }) {
   return (
     <Image
-      src={path}
-      alt={alt}
+      src={src}
       width={width}
       height={height}
       className={className}
+      alt={alt}
     />
   );
 }

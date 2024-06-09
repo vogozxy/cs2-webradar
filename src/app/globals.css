@@ -16,20 +16,67 @@ body {
   overflow-x: hidden;
 } */
 
-body {
-  @apply bg-white text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200;
+@layer base {
+  body {
+    @apply bg-white text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200;
+  }
+
+  header {
+    @apply flex items-center justify-center gap-4 pb-1.5 pt-4;
+  }
 }
 
-header {
-  @apply flex items-center justify-center gap-4 pb-1.5 pt-4;
-}
+@layer components {
+  .bg {
+    background-image: url(/assets/cs2.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 165vh;
+    @apply shadow-light dark:shadow-dark;
+  }
 
-.bg {
-  background-image: url(/assets/cs2.jpg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  height: 165vh;
-  @apply shadow-light dark:shadow-dark;
+  .react-select-container {
+    @apply text-sm;
+  }
+
+  .react-select-container .react-select__control {
+    @apply cursor-pointer border-2 border-zinc-300 bg-zinc-50 hover:border-gray-400 dark:border-zinc-600 dark:bg-zinc-900 dark:hover:border-zinc-500;
+  }
+
+  .react-select-container .react-select__multi-value {
+    @apply bg-zinc-200 dark:bg-zinc-300;
+  }
+
+  .react-select-container .react-select__multi-value__label,
+  .react-select-container .react-select__multi-value__remove {
+    @apply text-zinc-800 dark:text-zinc-900;
+  }
+
+  .react-select-container .react-select__control--is-focused {
+    @apply border-zinc-400 shadow-none hover:border-zinc-500 dark:border-zinc-500 dark:hover:border-zinc-400;
+  }
+
+  .react-select-container .react-select__menu {
+    @apply border-2 border-zinc-400 bg-zinc-50 dark:border-zinc-500 dark:bg-zinc-900;
+  }
+
+  .react-select-container .react-select__option {
+    @apply cursor-pointer bg-zinc-50 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800;
+  }
+
+  .react-select-container .react-select__indicator-separator {
+    @apply bg-zinc-200 dark:bg-zinc-600;
+  }
+
+  .react-select-container .react-select__input-container {
+    @apply text-zinc-800 dark:text-zinc-200;
+  }
+
+  .react-select-container .react-select__placeholder,
+  .react-select-container .react-select__menu-notice--no-options,
+  .react-select-container .react-select__single-value {
+    @apply text-zinc-400 dark:text-zinc-400;
+  }
 }
 
 /* @layer utilities {

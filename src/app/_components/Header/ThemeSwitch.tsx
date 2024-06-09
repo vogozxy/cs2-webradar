@@ -1,42 +1,15 @@
-import { useEffect } from "react";
-import { useLocalStorage } from "usehooks-ts";
+import { useContext } from "react";
 
-const getDarkModePreference = () => {
-  const darkMode = window.localStorage.getItem("dark_mode");
-  const isDarkMode =
-    darkMode === "true" || darkMode === "false"
-      ? JSON.parse(darkMode)
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  return isDarkMode;
-};
+import { SettingsContext } from "@/contexts/settings";
 
 export default function ThemeSwitch() {
-  const [darkMode, setDarkMode] = useLocalStorage<boolean>("dark_mode", false);
-
-  const handleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  useEffect(() => {
-    setDarkMode(getDarkModePreference());
-  }, [setDarkMode]);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, [darkMode]);
+  const settingsCtx = useContext(SettingsContext);
 
   return (
     <button
       type="button"
-      onClick={handleDarkMode}
-      className="h-10 w-10 overflow-hidden rounded-lg bg-black/5 p-2 dark:bg-white/5"
-      role="switch"
-      aria-checked="false"
+      onClick={() => settingsCtx.toggleDarkMode()}
+      className="h-10 w-10 overflow-hidden rounded-lg bg-black/5 p-2 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10"
     >
       <div className="translate-y-0 transform transition duration-200 ease-in-out dark:-translate-y-8">
         <svg

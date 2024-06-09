@@ -1,16 +1,18 @@
+import { useContext } from "react";
+
 import { DefuseStatus } from "@/types/bomb";
 
 import { getBombDefuseStatus } from "@/lib/bomb";
 
-import MaskedIcon from "@/components/MaskedIcon";
+import { GameContext } from "@/contexts/game";
 
-export default function BombPlantedStatus({
-  bombSite,
-  detonationTime,
-}: {
-  bombSite: "A" | "B" | "";
-  detonationTime: number;
-}) {
+import NextIMage from "@/components/NextImage";
+
+export default function BombPlantedStatus() {
+  const gameCtx = useContext(GameContext);
+
+  const detonationTime = gameCtx.gameData?.bomb.detonation_time ?? 0;
+  const bombSite = gameCtx.gameData?.bomb.site || "N/A";
   let bombTimerColor = "";
 
   switch (getBombDefuseStatus(detonationTime)) {
@@ -25,20 +27,20 @@ export default function BombPlantedStatus({
       break;
   }
 
-  if (bombSite === "") {
+  if (bombSite === "N/A") {
     bombTimerColor = "";
   }
 
   return (
     <section className="inline-flex gap-1">
-      <MaskedIcon
-        path="/assets/icons/c4-planted.svg"
+      <NextIMage
+        src="/assets/icons/c4-planted.svg"
         width={26}
         height={26}
         className="brightness-[0.25] dark:brightness-100"
         alt="C4"
       />
-      <span className="font-medium">{bombSite || "N/A"}</span>
+      <span className="font-medium">{bombSite}</span>
       <span className={bombTimerColor}>
         ({Math.max(0, detonationTime).toFixed(2)})
       </span>
