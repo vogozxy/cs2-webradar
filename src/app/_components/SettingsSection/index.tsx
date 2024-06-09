@@ -103,7 +103,7 @@ export default function SettingsSection() {
     <div
       className={`${!settingsCtx.showSettings ? "hidden" : ""} fixed left-0 right-0 top-0 z-10 flex h-full max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden bg-black/50 md:inset-0`}
     >
-      <div className="relative max-h-full w-full max-w-md p-4">
+      <div className="relative max-h-full w-full max-w-lg p-4">
         {/* Modal content */}
         <div className="relative rounded-lg bg-white shadow dark:bg-zinc-800">
           {/* Modal header */}
@@ -191,11 +191,11 @@ export default function SettingsSection() {
               </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex flex-col justify-between sm:flex-row">
               <button
                 type="button"
                 onClick={handleRestoreDefaults}
-                className="mt-2 inline-flex items-center rounded-lg border-2 border-zinc-300 px-5 py-2.5 text-center text-sm font-medium hover:bg-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:border-zinc-600 dark:hover:bg-zinc-600 dark:focus:ring-zinc-500"
+                className="mt-2 inline-flex items-center justify-center rounded-lg border-2 border-zinc-300 px-5 py-2.5 text-center text-sm font-medium hover:bg-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:border-zinc-600 dark:hover:bg-zinc-600 dark:focus:ring-zinc-500"
               >
                 Restore Defaults
               </button>
@@ -203,7 +203,7 @@ export default function SettingsSection() {
               <button
                 type="button"
                 onClick={handleSave}
-                className="mt-2 inline-flex items-center rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="mt-2 inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 Save
               </button>
