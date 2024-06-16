@@ -4,7 +4,7 @@ import SettingsButton from "./SettingsButton";
 
 export default function Header() {
   return (
-    <header>
+    <header className="flex items-center justify-center gap-4">
       <RadarTheme />
       <ThemeSwitch />
       <SettingsButton />

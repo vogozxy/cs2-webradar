@@ -132,12 +132,10 @@ export default function RadarMain() {
     context.reset();
 
     if (currentMap === "" || currentMap === "<empty>") {
-      // setDrawn(false);
       return;
     }
 
     if (!mapData) return;
-    // if (drawn) return;
 
     const scale = Math.min(
       context.canvas.width / mapData.width,

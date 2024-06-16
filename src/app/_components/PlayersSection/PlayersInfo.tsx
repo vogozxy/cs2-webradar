@@ -17,16 +17,17 @@ export default function PlayersInfo({ team }: { team: Team }) {
     [];
 
   return (
-    <section id={`${Team[team]}`} className="mb-1 space-y-2.5">
-      <h1
-        className={`lowercase ${team === Team.CounterTerrorist ? "text-[hsl(219,33%,52%)]" : "text-[hsl(36,72%,54%)]"}`}
-        style={{ fontVariant: "small-caps" }}
-      >
-        {team === Team.CounterTerrorist ? "Counter-Terrorists" : "Terrorists"}
-      </h1>
-
+    <section id={`${Team[team]}`} className="space-y-2">
       {gameCtx.inMatch && (
         <>
+          <h1
+            className={`lowercase ${team === Team.CounterTerrorist ? "text-[hsl(219,33%,52%)]" : "text-[hsl(36,72%,54%)]"}`}
+            style={{ fontVariant: "small-caps" }}
+          >
+            {team === Team.CounterTerrorist
+              ? "Counter-Terrorists"
+              : "Terrorists"}
+          </h1>
           {players
             .filter((player) => player.team === team)
             .map((player) => (

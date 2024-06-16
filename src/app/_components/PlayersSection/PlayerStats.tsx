@@ -40,14 +40,14 @@ export default function PlayerStats({
 }: PlayerStatsProps) {
   return (
     <div className="overflow-hidden rounded-md bg-black/5 text-zinc-800 dark:bg-white/5 dark:text-white">
-      <div className="relative grid w-full grid-cols-3 items-center justify-between bg-black/20 text-white dark:bg-white/5">
+      <div className="relative grid w-full grid-cols-3 items-center justify-between bg-black/20 px-2 py-1 text-white dark:bg-white/5">
         <div
           className={`absolute h-full w-[0%] ${team === Team.Terrorist ? "bg-[hsl(36,74%,23%)]" : "bg-[hsl(219,33%,52%)]"}`}
           style={{ width: `${health}%` }}
         ></div>
 
-        <span className="relative px-2 py-1">{health}</span>
-        <span className="relative truncate px-2 py-1">
+        <span className="relative">{health}</span>
+        <span className="relative truncate">
           <span style={{ color: PLAYER_COLORS[color] }}>&#x25cf;</span>{" "}
           {nickname}
         </span>
