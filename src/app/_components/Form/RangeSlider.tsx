@@ -6,7 +6,7 @@ export default function RangeSlider({
   className,
   min = 0,
   max = 50,
-  defaultValue = min,
+  defaultValue,
   value,
   step = 1,
   stepLabel = false,
@@ -21,6 +21,10 @@ export default function RangeSlider({
   step?: number;
   stepLabel?: boolean;
 }) {
+  if (typeof value === "undefined" && typeof defaultValue === "undefined") {
+    defaultValue = min;
+  }
+
   return (
     <>
       <input
@@ -30,8 +34,8 @@ export default function RangeSlider({
         className={className}
         min={min}
         max={max}
-        defaultValue={defaultValue}
         value={value}
+        defaultValue={defaultValue}
         step={step}
       />
       {stepLabel && (

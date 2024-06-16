@@ -142,7 +142,6 @@ export default function SettingsSection() {
                   className="mb-1 mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 focus:outline-blue-700 dark:bg-gray-700"
                   min={6}
                   max={10}
-                  defaultValue={playerDotSize}
                   value={playerDotSize}
                   stepLabel
                 />
@@ -161,7 +160,6 @@ export default function SettingsSection() {
                   className="mb-1 mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 focus:outline-blue-700 dark:bg-gray-700"
                   min={20}
                   max={25}
-                  defaultValue={playerViewAngleLength}
                   value={playerViewAngleLength}
                   stepLabel
                 />
