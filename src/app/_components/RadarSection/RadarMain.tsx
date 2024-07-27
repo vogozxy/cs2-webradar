@@ -137,15 +137,28 @@ export default function RadarMain() {
 
     if (!mapData) return;
 
+    // Calculate scale based on the background canvas size
     const scale = Math.min(
       context.canvas.width / mapData.width,
       context.canvas.height / mapData.height
     );
 
+    // Apply scaling to the context
     context.scale(scale, scale);
+
+    // Calculate offset to center the radar elements
+    const offsetX = (context.canvas.width / scale - mapData.width) / 2;
+    const offsetY = (context.canvas.height / scale - mapData.height) / 2;
+
+    // Save the current state to revert back later after applying transformations
+    context.save();
+    context.translate(offsetX, offsetY);
 
     drawPlayers(context);
     drawBomb(context);
+
+    // Restore the context state to avoid affecting other drawings
+    context.restore();
   };
 
   return <Canvas className="absolute inset-0 mx-auto" draw={drawMain} />;

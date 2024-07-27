@@ -36,10 +36,11 @@ export default function RadarBackground() {
       const newHeight = image.height * scale;
 
       // Calculate the position to center the image on the canvas
-      // const offsetX = (width - newWidth) / 2;
-      // const offsetY = (height - newHeight) / 2;
+      const offsetX = (context.canvas.width - newWidth) / 2;
+      const offsetY = (context.canvas.height - newHeight) / 2;
 
-      context.drawImage(image, 0, 0, newWidth, newHeight);
+      // Draw the image centered on the canvas
+      context.drawImage(image, offsetX, offsetY, newWidth, newHeight);
 
       setImageDrawn(true);
     };
