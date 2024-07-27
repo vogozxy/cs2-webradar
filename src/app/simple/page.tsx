@@ -15,8 +15,8 @@ export default function Home() {
       <BombSection />
 
       {gameCtx.inMatch ? (
-        <main>
-          <RadarSection className="relative h-[calc(100svh-5rem)] rounded-lg bg-black/5 dark:bg-white/5" />
+        <main className="h-[calc(100svh-4rem)]">
+          <RadarSection className="relative h-full rounded-lg bg-black/5 dark:bg-white/5" />
         </main>
       ) : (
         <div className="fixed inset-0 -z-10 flex items-center justify-center drop-shadow-xl">

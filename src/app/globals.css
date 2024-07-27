@@ -15,11 +15,11 @@
 
   html,
   body {
-    @apply min-h-svh text-base;
+    @apply min-h-svh text-base lg:h-svh lg:max-h-svh;
   }
 
   body {
-    @apply flex max-w-full flex-col gap-2 bg-white p-4 text-zinc-800 lg:gap-4 dark:bg-zinc-900 dark:text-zinc-200;
+    @apply flex max-w-full flex-col gap-2 bg-white p-2 text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200;
   }
 }
 
