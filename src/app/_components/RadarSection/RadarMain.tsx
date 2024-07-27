@@ -42,9 +42,15 @@ export default function RadarMain() {
     }
 
     context.beginPath();
-    context.font = "bold 20px Poppins";
-    context.fillStyle = "#FFD700";
+    context.font = "bold 20px Verdana, sans-serif";
     context.textAlign = "center";
+    context.shadowColor = "gray";
+    context.shadowBlur = 1;
+    context.strokeStyle = "black";
+    context.strokeText("C4", bombPos.x, bombPos.y);
+    context.shadowColor = "";
+    context.shadowBlur = 0;
+    context.fillStyle = "#FFD700";
     context.fillText("C4", bombPos.x, bombPos.y);
   };
 
@@ -86,8 +92,9 @@ export default function RadarMain() {
       context.moveTo(playerPosition.x, playerPosition.y);
       context.lineTo(playerViewDirection.x, playerViewDirection.y);
       context.strokeStyle = color;
-      context.lineWidth = 2;
+      context.lineWidth = 3;
       context.stroke();
+      context.lineWidth = 1;
 
       // Begin drawing player circle
       context.beginPath();
@@ -108,20 +115,35 @@ export default function RadarMain() {
           context.fill();
         }
       } else {
+        context.lineWidth = 3;
+        context.strokeStyle = "#666666";
+        context.stroke();
+        context.lineWidth = 1;
         context.fillStyle = color;
         context.fill();
       }
 
       // Display important weapons on map
+      const importantWeapon = hasImportantWeapons(
+        settingsCtx.settings.player.importantWeapons,
+        player.weapons
+      );
       context.beginPath();
-      context.font = "12px Poppins";
-      context.fillStyle = "#FFFFE0";
+      context.font = "13px Verdana, sans-serif";
       context.textAlign = "center";
+      context.shadowColor = "black";
+      context.shadowBlur = 1;
+      context.strokeStyle = "black";
+      context.strokeText(
+        importantWeapon,
+        playerPosition.x,
+        playerPosition.y + dotSize * 3
+      );
+      context.shadowColor = "";
+      context.shadowBlur = 0;
+      context.fillStyle = "#FFFFE0";
       context.fillText(
-        hasImportantWeapons(
-          settingsCtx.settings.player.importantWeapons,
-          player.weapons
-        ),
+        importantWeapon,
         playerPosition.x,
         playerPosition.y + dotSize * 3
       );
