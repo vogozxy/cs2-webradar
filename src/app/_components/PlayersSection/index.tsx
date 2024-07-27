@@ -8,15 +8,17 @@ import PlayersInfo from "./PlayersInfo";
 
 export default function PlayersSection({ className }: { className?: string }) {
   const gameCtx = useContext(GameContext);
+  const enemyTeam =
+    gameCtx.gameData?.local_player.team === Team.CounterTerrorist
+      ? Team.Terrorist
+      : Team.CounterTerrorist;
 
   return (
     <section
       id="players"
       className={`${className} ${gameCtx.gameData?.local_player.team === Team.Terrorist ? "flex-col" : "flex-col-reverse"} flex`}
     >
-      <PlayersInfo team={Team.CounterTerrorist} />
-
-      <PlayersInfo team={Team.Terrorist} />
+      <PlayersInfo team={enemyTeam} />
     </section>
   );
 }
