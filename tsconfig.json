@@ -17,15 +17,15 @@
         "name": "next"
       }
     ],
-    "baseUrl": "./src/app",
+    "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
-      "@/types/*": ["_types/*"],
-      "@/constants/*": ["_constants/*"],
-      "@/lib/*": ["_lib/*"],
-      "@/components/*": ["_components/*"],
-      "@/hooks/*": ["_hooks/*"],
-      "@/contexts/*": ["_contexts/*"]
+      "@/types/*": ["types/*"],
+      "@/constants/*": ["constants/*"],
+      "@/lib/*": ["lib/*"],
+      "@/components/*": ["components/*"],
+      "@/hooks/*": ["lib/hooks/*"],
+      "@/contexts/*": ["contexts/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
