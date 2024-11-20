@@ -1,38 +1,36 @@
-import { Grenade } from "@/types/weapon";
+import { memo } from "react";
 
-import NextImage from "@/components/NextImage";
+import { GrenadeIcon } from "@/components/Icons";
 
-const Nade = ({ nade }: { nade?: number }) => {
-  return (
-    <li className="flex h-6 w-6 shrink-0 list-none items-center justify-center rounded-md bg-black/10 text-center dark:bg-white/5">
-      {nade ? (
-        <NextImage
-          src={`/assets/icons/${Grenade[nade].toLowerCase()}.svg`}
-          width={20}
-          height={20}
-          className="h-5 w-5 brightness-[0.25] dark:brightness-100"
-          alt={Grenade[nade]}
-        />
-      ) : (
-        <></>
-      )}
-    </li>
-  );
+type NadeProps = {
+  nade?: number;
 };
 
-export default function PlayerNades({ nades }: { nades: number[] }) {
+function Nade({ nade }: NadeProps) {
+  return (
+    <li className="flex h-6 w-6 shrink-0 list-none items-center justify-center rounded-md bg-black/10 text-center dark:bg-white/5">
+      {nade && <GrenadeIcon nade={nade} size={20} />}
+    </li>
+  );
+}
+
+type PlayerNadesProps = {
+  playerIndex: number;
+  nades: number[];
+};
+
+function PlayerNades({ playerIndex, nades }: PlayerNadesProps) {
   return (
     <ul data-nades={nades} className="flex justify-end gap-1 md:justify-normal">
-      {nades.length ? (
-        [...Array(4)].map((x, i) => <Nade key={i} nade={nades[i]} />)
-      ) : (
-        <>
-          <Nade />
-          <Nade />
-          <Nade />
-          <Nade />
-        </>
-      )}
+      {nades.length
+        ? [...Array(4)].map((_, i) => (
+            <Nade key={`player-nade-${playerIndex}-${i}`} nade={nades[i]} />
+          ))
+        : Array.from({ length: 4 }, (_, i) => (
+            <Nade key={`player-nade-${playerIndex}-${i}`} />
+          ))}
     </ul>
   );
 }
+
+export default memo(PlayerNades);

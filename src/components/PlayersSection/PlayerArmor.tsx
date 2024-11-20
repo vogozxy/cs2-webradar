@@ -1,23 +1,18 @@
-import NextImage from "@/components/NextImage";
+import { memo } from "react";
 
-export default function PlayerArmor({
-  armor,
-  hasHelmet,
-}: {
+import { ArmorIcon } from "@/components/Icons";
+
+type PlayerArmorProps = {
   armor: number;
   hasHelmet: boolean;
-}) {
+};
+
+function PlayerArmor({ armor, hasHelmet }: PlayerArmorProps) {
   return (
     <div className="flex h-6 w-6 shrink-0 list-none items-center justify-center rounded-md bg-black/10 text-center dark:bg-white/5">
-      {armor > 0 && (
-        <NextImage
-          src={`/assets/icons/${hasHelmet ? "armor-helmet" : "armor"}.svg`}
-          width={20}
-          height={20}
-          className="h-5 w-5 brightness-[0.25] dark:brightness-100"
-          alt={`${armor}`}
-        />
-      )}
+      {armor > 0 && <ArmorIcon hasHelmet={hasHelmet} size={20} />}
     </div>
   );
 }
+
+export default memo(PlayerArmor);

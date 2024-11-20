@@ -20,11 +20,12 @@
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
+      "@/public/*": ["../public/*"],
       "@/types/*": ["types/*"],
       "@/constants/*": ["constants/*"],
       "@/lib/*": ["lib/*"],
-      "@/components/*": ["components/*"],
       "@/hooks/*": ["lib/hooks/*"],
+      "@/components/*": ["components/*"],
       "@/contexts/*": ["contexts/*"]
     }
   },

@@ -1,22 +1,22 @@
-import { useContext } from "react";
+import { useMeasure } from "@uidotdev/usehooks";
 
-import { GameContext } from "@/contexts/game";
-
-import Radar from "./Radar";
 import RadarMain from "./RadarMain";
 import RadarBackground from "./RadarBackground";
 
-export default function RadarSection({ className }: { className?: string }) {
-  const gameCtx = useContext(GameContext);
+type RadarSectionProps = {} & React.HTMLAttributes<HTMLElement>;
+
+export default function RadarSection({ ...props }: RadarSectionProps) {
+  const [radarRef, radarSize] = useMeasure();
 
   return (
-    <section className={className}>
-      {gameCtx.inMatch && (
-        <Radar id="radar" className="h-full w-full">
-          <RadarBackground />
-          <RadarMain />
-        </Radar>
-      )}
+    <section ref={radarRef} id="radar" {...props}>
+      <RadarBackground />
+      <RadarMain
+        radarSize={{
+          width: radarSize.width || 0,
+          height: radarSize.height || 0,
+        }}
+      />
     </section>
   );
 }

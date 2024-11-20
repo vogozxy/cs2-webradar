@@ -1,11 +1,12 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useMemo } from "react";
 import Select from "react-select";
 
 import { PrimaryWeapon } from "@/types/weapon";
 
 import { DEFAULT_PLAYER_SETTINGS } from "@/constants/settings";
 
-import { SettingsContext } from "@/contexts/settings";
+import { useSettingsContext } from "@/lib/hooks/use-settings-context";
+import { cn } from "@/lib/utils";
 
 import RangeSlider from "@/components/Form/RangeSlider";
 
@@ -18,90 +19,119 @@ const importantWeaponsOptions: SelectOption[] = Object.entries(PrimaryWeapon)
   .filter(([_key, value]) => typeof value === "number")
   .map(([key, value]) => ({ value: `${value}`, label: key }));
 
-const getImportantWeaponsValue = (
-  importantWeapons: number[]
-): SelectOption[] => {
-  return importantWeapons.map((value) => ({
-    value: `${value}`,
-    label: PrimaryWeapon[value],
-  }));
-};
-
 export default function SettingsSection() {
-  const settingsCtx = useContext(SettingsContext);
+  const { showSettings, settings, showSettingsMenu, updateSettings } =
+    useSettingsContext();
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
-  const [playerDotSize, setPlayerDotSize] = useState<number>(
-    settingsCtx.settings.player.dotSize
+  const [showPlayerHealth, setShowPlayerHealth] = useState<boolean>(
+    settings.player.showHealth
   );
 
-  const [playerViewAngleLength, setPlayerViewAngleLength] = useState<number>(
-    settingsCtx.settings.player.viewAngleLength
+  const [showPlayerWeapon, setShowPlayerWeapon] = useState<boolean>(
+    settings.player.showWeapon
+  );
+
+  const [playerDotSize, setPlayerDotSize] = useState<number>(
+    settings.player.dotSize
   );
 
   const [playerImportantWeapons, setPlayerImportantWeapons] = useState<
     number[]
-  >(settingsCtx.settings.player.importantWeapons);
+  >(settings.player.importantWeapons);
+
+  const getImportantWeaponsValue = useCallback(
+    (importantWeapons: number[]): SelectOption[] => {
+      return importantWeapons.map((value) => ({
+        value: `${value}`,
+        label: PrimaryWeapon[value],
+      }));
+    },
+    []
+  );
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const handlePlayerDotSize = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const dotSize =
-      parseInt((event.target as HTMLInputElement).value) ||
-      settingsCtx.settings.player.dotSize;
+  const togglePlayerHealth = useCallback(() => {
+    setShowPlayerHealth((health) => !health);
+  }, []);
 
-    setPlayerDotSize(dotSize);
-  };
+  const togglePlayerWeapon = useCallback(() => {
+    setShowPlayerWeapon((weapon) => !weapon);
+  }, []);
 
-  const handlePlayerViewAngleLength = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const viewAngleLength =
-      parseInt((event.target as HTMLInputElement).value) ||
-      settingsCtx.settings.player.viewAngleLength;
+  const handlePlayerDotSize = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const dotSize =
+        parseInt((event.target as HTMLInputElement).value) ||
+        settings.player.dotSize;
 
-    setPlayerViewAngleLength(viewAngleLength);
-  };
+      setPlayerDotSize(dotSize);
+    },
+    [settings.player.dotSize]
+  );
 
-  const handlePlayerImportantWeapons = (option: readonly SelectOption[]) => {
-    const importantWeapons: number[] = option
-      .map(({ value }) => parseInt(value))
-      .filter((num) => !isNaN(num));
+  const handlePlayerImportantWeapons = useCallback(
+    (option: readonly SelectOption[]) => {
+      const importantWeapons: number[] = option
+        .map(({ value }) => parseInt(value))
+        .filter((num) => !isNaN(num));
 
-    setPlayerImportantWeapons(importantWeapons);
-  };
+      setPlayerImportantWeapons(importantWeapons);
+    },
+    []
+  );
 
-  const handleSave = () => {
-    settingsCtx.updateSettings({
-      ...settingsCtx.settings,
+  const handleSave = useCallback(() => {
+    updateSettings({
+      ...settings,
       player: {
-        ...settingsCtx.settings.player,
+        ...settings.player,
+        showHealth: showPlayerHealth,
+        showWeapon: showPlayerWeapon,
         dotSize: playerDotSize,
-        viewAngleLength: playerViewAngleLength,
         importantWeapons: playerImportantWeapons,
       },
     });
-  };
+  }, [
+    showPlayerHealth,
+    showPlayerWeapon,
+    playerDotSize,
+    playerImportantWeapons,
+    settings,
+    updateSettings,
+  ]);
 
-  const handleRestoreDefaults = () => {
+  const handleRestoreDefaults = useCallback(() => {
+    setShowPlayerHealth(DEFAULT_PLAYER_SETTINGS.showHealth);
+    setShowPlayerWeapon(DEFAULT_PLAYER_SETTINGS.showWeapon);
     setPlayerDotSize(DEFAULT_PLAYER_SETTINGS.dotSize);
-    setPlayerViewAngleLength(DEFAULT_PLAYER_SETTINGS.viewAngleLength);
     setPlayerImportantWeapons(DEFAULT_PLAYER_SETTINGS.importantWeapons);
-  };
+  }, []);
 
-  const handleClose = () => {
-    settingsCtx.showSettingsMenu(false);
-    setPlayerDotSize(settingsCtx.settings.player.dotSize);
-    setPlayerViewAngleLength(settingsCtx.settings.player.viewAngleLength);
-    setPlayerImportantWeapons(settingsCtx.settings.player.importantWeapons);
-  };
+  const handleClose = useCallback(() => {
+    showSettingsMenu(false);
+    setShowPlayerHealth(settings.player.showHealth);
+    setShowPlayerWeapon(settings.player.showWeapon);
+    setPlayerDotSize(settings.player.dotSize);
+    setPlayerImportantWeapons(settings.player.importantWeapons);
+  }, [
+    settings.player.showHealth,
+    settings.player.showWeapon,
+    settings.player.dotSize,
+    settings.player.importantWeapons,
+    showSettingsMenu,
+  ]);
 
   return (
     <div
-      className={`${!settingsCtx.showSettings ? "hidden" : ""} fixed left-0 right-0 top-0 z-10 flex h-full max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden bg-black/50 md:inset-0`}
+      className={cn(
+        "fixed inset-0 z-10 flex h-full max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden bg-black/50 md:inset-0",
+        !showSettings && "hidden"
+      )}
     >
       <div className="relative max-h-full w-full max-w-lg p-4">
         {/* Modal content */}
@@ -129,7 +159,41 @@ export default function SettingsSection() {
           {/* Modal body */}
           <div className="p-4 md:p-5">
             <div className="mb-4 grid grid-cols-2 gap-4">
-              <div className="col-span-2 sm:col-span-1">
+              <div className="col-span-2">
+                <label className="mb-2 block text-sm font-medium">
+                  Player Info
+                </label>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <label className="col-span-2 inline-flex cursor-pointer items-center align-middle sm:col-span-1">
+                    <input
+                      className="peer sr-only"
+                      type="checkbox"
+                      value="player-health"
+                      checked={showPlayerHealth}
+                      onClick={togglePlayerHealth}
+                      readOnly
+                    />
+                    <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                    <span className="ms-3 text-sm font-medium">Health</span>
+                  </label>
+
+                  <label className="col-span-2 inline-flex cursor-pointer items-center align-middle sm:col-span-1">
+                    <input
+                      className="peer sr-only"
+                      type="checkbox"
+                      value="player-weapon"
+                      checked={showPlayerWeapon}
+                      onClick={togglePlayerWeapon}
+                      readOnly
+                    />
+                    <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                    <span className="ms-3 text-sm font-medium">Weapon</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="col-span-2">
                 <label
                   htmlFor="settings-player-dot-size"
                   className="mb-2 block text-sm font-medium"
@@ -140,27 +204,9 @@ export default function SettingsSection() {
                   id="settings-player-dot-size"
                   onChange={handlePlayerDotSize}
                   className="mb-1 mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 focus:outline-blue-700 dark:bg-gray-700"
-                  min={6}
-                  max={10}
+                  min={12}
+                  max={20}
                   value={playerDotSize}
-                  stepLabel
-                />
-              </div>
-
-              <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="settings-view-angle-length"
-                  className="mb-2 block text-sm font-medium"
-                >
-                  View Angle Length
-                </label>
-                <RangeSlider
-                  id="settings-view-angle-length"
-                  onChange={handlePlayerViewAngleLength}
-                  className="mb-1 mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 focus:outline-blue-700 dark:bg-gray-700"
-                  min={20}
-                  max={25}
-                  value={playerViewAngleLength}
                   stepLabel
                 />
               </div>

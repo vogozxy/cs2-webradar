@@ -1,45 +1,39 @@
-import { useContext } from "react";
+import { useMemo } from "react";
 
 import { DefuseStatus } from "@/types/bomb";
 
 import { getBombDefuseStatus } from "@/lib/bomb";
 
-import { GameContext } from "@/contexts/game";
+import { useGameContext } from "@/lib/hooks/use-game-context";
 
-import NextIMage from "@/components/NextImage";
+import { BombPlantedIcon } from "@/components/Icons";
 
 export default function BombPlantedStatus() {
-  const gameCtx = useContext(GameContext);
+  const { gameData } = useGameContext();
 
-  const detonationTime = gameCtx.gameData?.bomb.detonation_time ?? 0;
-  const bombSite = gameCtx.gameData?.bomb.site || "N/A";
-  let bombTimerColor = "";
+  const detonationTime = gameData?.bomb?.detonation_time ?? 0;
+  const bombSite = gameData?.bomb?.site || "N/A";
 
-  switch (getBombDefuseStatus(detonationTime)) {
-    case DefuseStatus.Defuseable:
-      bombTimerColor = "text-green-600";
-      break;
-    case DefuseStatus.DefuseWithKit:
-      bombTimerColor = "text-yellow-600";
-      break;
-    case DefuseStatus.NoTime:
-      bombTimerColor = "text-red-600";
-      break;
-  }
+  const bombTimerColor = useMemo(() => {
+    if (bombSite === "N/A") {
+      return "";
+    }
 
-  if (bombSite === "N/A") {
-    bombTimerColor = "";
-  }
+    switch (getBombDefuseStatus(detonationTime)) {
+      case DefuseStatus.Defuseable:
+        return "text-green-600";
+      case DefuseStatus.DefuseWithKit:
+        return "text-yellow-600";
+      case DefuseStatus.NoTime:
+        return "text-red-600";
+      default:
+        return "";
+    }
+  }, [detonationTime, bombSite]);
 
   return (
-    <section className="inline-flex gap-1">
-      <NextIMage
-        src="/assets/icons/c4-planted.svg"
-        width={26}
-        height={26}
-        className="brightness-[0.25] dark:brightness-100"
-        alt="C4"
-      />
+    <section className="inline-flex items-center gap-1">
+      <BombPlantedIcon size={26} />
       <span className="font-medium">{bombSite}</span>
       <span className={bombTimerColor}>
         ({Math.max(0, detonationTime).toFixed(2)})

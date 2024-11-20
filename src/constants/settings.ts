@@ -2,8 +2,9 @@ import type { Settings, PlayerSettings } from "@/types/settings";
 import { PrimaryWeapon } from "@/types/weapon";
 
 export const DEFAULT_PLAYER_SETTINGS: PlayerSettings = {
-  dotSize: 8,
-  viewAngleLength: 22,
+  showHealth: true,
+  showWeapon: true,
+  dotSize: 12,
   importantWeapons: [
     PrimaryWeapon.AWP,
     PrimaryWeapon.G3SG1,

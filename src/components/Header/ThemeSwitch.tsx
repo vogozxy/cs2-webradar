@@ -1,14 +1,18 @@
-import { useContext } from "react";
+import { useCallback } from "react";
 
-import { SettingsContext } from "@/contexts/settings";
+import { useSettingsContext } from "@/lib/hooks/use-settings-context";
 
 export default function ThemeSwitch() {
-  const settingsCtx = useContext(SettingsContext);
+  const { toggleDarkMode } = useSettingsContext();
+
+  const handleToggleDarkMode = useCallback(() => {
+    toggleDarkMode();
+  }, [toggleDarkMode]);
 
   return (
     <button
       type="button"
-      onClick={() => settingsCtx.toggleDarkMode()}
+      onClick={handleToggleDarkMode}
       className="h-10 w-10 overflow-hidden rounded-lg bg-black/5 p-2 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10"
     >
       <div className="translate-y-0 transform transition duration-200 ease-in-out dark:-translate-y-8">

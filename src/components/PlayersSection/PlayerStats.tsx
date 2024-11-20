@@ -1,3 +1,5 @@
+import { memo, useMemo } from "react";
+
 import { Team } from "@/types/team";
 
 import { PLAYER_COLORS } from "@/constants/player";
@@ -8,6 +10,7 @@ import {
   getNades,
   playerHasBomb,
 } from "@/lib/weapon";
+import { cn } from "@/lib/utils";
 
 import PlayerPrimaryWeapon from "./PlayerPrimaryWeapon";
 import PlayerSecondaryWeapon from "./PlayerSecondaryWeapon";
@@ -16,6 +19,7 @@ import PlayerNades from "./PlayerNades";
 import PlayerMisc from "./PlayerMisc";
 
 type PlayerStatsProps = {
+  index: number;
   color: number;
   nickname: string;
   team: Team;
@@ -27,7 +31,8 @@ type PlayerStatsProps = {
   hasDefuser: boolean;
 };
 
-export default function PlayerStats({
+function PlayerStats({
+  index,
   color,
   nickname,
   team,
@@ -38,38 +43,63 @@ export default function PlayerStats({
   weapons,
   hasDefuser,
 }: PlayerStatsProps) {
+  const playerStats = useMemo(() => {
+    return {
+      primaryWeapon: getPrimaryWeapon(weapons),
+      secondaryWeapon: getSecondaryWeapon(weapons),
+      nades: getNades(weapons),
+    };
+  }, [weapons]);
+
   return (
     <div className="overflow-hidden rounded-md bg-black/5 text-zinc-800 dark:bg-white/5 dark:text-white">
-      <div className="relative grid w-full grid-cols-3 items-center justify-between bg-black/20 px-2 py-1 text-white dark:bg-white/5">
+      <div className="relative grid w-full grid-cols-3 items-center justify-between bg-black/20 p-1.5 text-white dark:bg-white/5">
         <div
-          className={`absolute h-full w-[0%] ${team === Team.Terrorist ? "bg-[hsl(36,74%,23%)]" : "bg-[hsl(219,33%,52%)]"}`}
+          className={cn(
+            "absolute h-full w-[0%]",
+            team === Team.Terrorist
+              ? "bg-[hsl(36,74%,23%)]"
+              : "bg-[hsl(219,33%,52%)]"
+          )}
           style={{ width: `${health}%` }}
         ></div>
-
         <span className="relative">{health}</span>
         <span className="relative truncate">
-          <span style={{ color: PLAYER_COLORS[color] }}>&#x25cf;</span>{" "}
+          <span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill={`${PLAYER_COLORS[color]}`}
+              className="pointer-events-none inline"
+            >
+              <circle cx="10" cy="10" r="5" />
+            </svg>
+          </span>{" "}
           {nickname}
         </span>
-        <PlayerPrimaryWeapon weapon={getPrimaryWeapon(weapons)} />
+        <PlayerPrimaryWeapon weapon={playerStats.primaryWeapon} />
       </div>
 
-      <div className="grid w-full grid-cols-2 items-center justify-between gap-2 px-2 py-1 sm:grid-cols-4">
+      <div className="grid w-full grid-cols-2 gap-2 p-1.5 md:grid-cols-3 md:gap-0">
         <span data-money={money} className="text-green-500">
           ${money}
         </span>
-        <PlayerNades nades={getNades(weapons)} />
-        <div className="col-span-2 flex flex-row-reverse items-center justify-between sm:flex-row">
-          <div className="flex gap-2 brightness-[0.25] dark:brightness-100">
+        <PlayerNades playerIndex={index} nades={playerStats.nades} />
+        <div className="col-span-2 flex flex-row-reverse items-center justify-between md:col-span-1 md:flex-row">
+          <div className="flex gap-1.5 brightness-[0.25] dark:brightness-100">
             <PlayerArmor armor={armor} hasHelmet={hasHelmet} />
             <PlayerMisc
               hasDefuser={hasDefuser}
               hasBomb={playerHasBomb(weapons)}
             />
           </div>
-          <PlayerSecondaryWeapon weapon={getSecondaryWeapon(weapons)} />
+          <PlayerSecondaryWeapon weapon={playerStats.secondaryWeapon} />
         </div>
       </div>
     </div>
   );
 }
+
+export default memo(PlayerStats);

@@ -1,14 +1,18 @@
-import React, { useContext } from "react";
+import { useCallback } from "react";
 
-import { SettingsContext } from "@/contexts/settings";
+import { useSettingsContext } from "@/lib/hooks/use-settings-context";
 
 export default function SettingsButton() {
-  const settingsCtx = useContext(SettingsContext);
+  const { showSettingsMenu } = useSettingsContext();
+
+  const openSettingsMenu = useCallback(() => {
+    showSettingsMenu(true);
+  }, [showSettingsMenu]);
 
   return (
     <button
       type="button"
-      onClick={() => settingsCtx.showSettingsMenu(true)}
+      onClick={openSettingsMenu}
       className="h-10 w-10 overflow-hidden rounded-lg bg-black/5 p-2 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10"
     >
       <svg

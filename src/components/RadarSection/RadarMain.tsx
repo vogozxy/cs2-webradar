@@ -1,187 +1,244 @@
-import { useContext } from "react";
+import {
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  memo,
+  Fragment,
+} from "react";
 
 import { PLAYER_COLORS } from "@/constants/player";
 
-import { getPlayerRadarPosition, getPlayerViewDirection } from "@/lib/player";
+import { useGameContext } from "@/lib/hooks/use-game-context";
+import { useSettingsContext } from "@/lib/hooks/use-settings-context";
+import { getRadarPosition } from "@/lib/radar";
+import { getPlayerViewDirection } from "@/lib/player";
 import { hasImportantWeapons } from "@/lib/weapon";
-import { getBombRadarPosition } from "@/lib/bomb";
 
-import { SettingsContext } from "@/contexts/settings";
-import { GameContext } from "@/contexts/game";
+import { BombIcon, PlayerIcon } from "@/components/Icons";
 
-import Canvas from "@/components/Canvas";
+import { Player } from "@/types/player";
+import { Team } from "@/types/team";
+import { Bomb } from "@/types/bomb";
 
-export default function RadarMain() {
-  const settingsCtx = useContext(SettingsContext);
-  const gameCtx = useContext(GameContext);
+const calculateRadarEffectiveDimensions = (radarSize: {
+  width: number;
+  height: number;
+}) => {
+  const aspectRatio = 1024 / 1024; // Aspect ratio of the radar image
+  const containerAspectRatio = radarSize.width / radarSize.height;
 
-  const radarTheme = settingsCtx.radarTheme;
-  const mapData = gameCtx.mapData;
-  const currentMap = gameCtx.currentMap;
-  const localPlayerTeam = gameCtx.gameData?.local_player.team;
-  const bombInfo = gameCtx.gameData?.bomb;
-  const players =
-    (gameCtx.gameData && [
-      gameCtx.gameData.local_player,
-      ...gameCtx.gameData.players,
-    ]) ??
-    [];
+  let effectiveWidth = radarSize.width;
+  let effectiveHeight = radarSize.height;
 
-  const drawBomb = (context: CanvasRenderingContext2D) => {
-    if (!mapData || !bombInfo) return;
+  if (containerAspectRatio > aspectRatio) {
+    // Container is wider than the image aspect ratio
+    effectiveWidth = radarSize.height * aspectRatio;
+  } else {
+    // Container is taller than the image aspect ratio
+    effectiveHeight = radarSize.width / aspectRatio;
+  }
 
-    const bombPos = getBombRadarPosition(bombInfo.position, mapData);
+  const offsetX = (radarSize.width - effectiveWidth) / 2;
+  const offsetY = (radarSize.height - effectiveHeight) / 2;
 
-    // Offset position if playing on two-level map
-    if (mapData.z_cutoff) {
-      bombPos.x += mapData.width / 4;
+  return { effectiveWidth, effectiveHeight, offsetX, offsetY };
+};
 
-      if (bombPos.z < mapData.z_cutoff) {
-        bombPos.y += mapData.height / 2;
-      }
-    }
+type CustomPlayer = {
+  importantWeapon: string;
+  viewDirection: number;
+} & Player;
 
-    context.beginPath();
-    context.font = "bold 20px Verdana, sans-serif";
-    context.textAlign = "center";
-    context.shadowColor = "gray";
-    context.shadowBlur = 1;
-    context.strokeStyle = "black";
-    context.strokeText("C4", bombPos.x, bombPos.y);
-    context.shadowColor = "";
-    context.shadowBlur = 0;
-    context.fillStyle = "#FFD700";
-    context.fillText("C4", bombPos.x, bombPos.y);
+type RadarMainProps = {
+  radarSize: {
+    width: number;
+    height: number;
   };
+};
 
-  const drawPlayers = (context: CanvasRenderingContext2D) => {
-    if (!mapData || !localPlayerTeam) return;
+function RadarMain({ radarSize }: RadarMainProps) {
+  const [players, setPlayers] = useState<CustomPlayer[]>([]);
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const { gameData, mapData } = useGameContext();
+  const { settings, radarTheme } = useSettingsContext();
 
-    for (const player of players) {
-      if (!player.alive) continue;
-      if (!player.position.x || !player.position.y) continue;
+  const showHealth = settings.player.showHealth;
+  const showWeapon = settings.player.showWeapon;
+  const dotSize = settings.player.dotSize;
+  const importantWeapons = settings.player.importantWeapons;
 
-      const dotSize = settingsCtx.settings.player.dotSize;
-      const isTeammate = player.team === localPlayerTeam;
-      const color =
-        radarTheme === "default"
-          ? PLAYER_COLORS[player.color]
-          : isTeammate
-            ? "#00ff00"
-            : "#ff0000";
+  const localPlayerTeam = useMemo(() => {
+    if (!gameData || !gameData.local_player) return Team.None;
 
-      const playerPosition = getPlayerRadarPosition(player.position, mapData);
+    return gameData.local_player.team;
+  }, [gameData]);
 
-      // Offset position if playing on two-level map
-      if (mapData.z_cutoff) {
-        playerPosition.x += mapData.width / 4;
+  const bombInfo: Bomb = useMemo(() => {
+    if (!gameData || !gameData.bomb || !mapData) return null;
 
-        if (playerPosition.z < mapData.z_cutoff) {
-          playerPosition.y += mapData.height / 2;
-        }
-      }
+    const { effectiveWidth, effectiveHeight, offsetX, offsetY } =
+      calculateRadarEffectiveDimensions(radarSize);
 
-      const playerViewDirection = getPlayerViewDirection(
-        playerPosition,
-        player.view_angles,
-        settingsCtx.settings.player.viewAngleLength
-      );
+    const bombRadarPosition = getRadarPosition(gameData.bomb.position, mapData);
 
-      // Draw view direction
-      context.beginPath();
-      context.moveTo(playerPosition.x, playerPosition.y);
-      context.lineTo(playerViewDirection.x, playerViewDirection.y);
-      context.strokeStyle = color;
-      context.lineWidth = 3;
-      context.stroke();
-      context.lineWidth = 1;
+    const scaledX =
+      (bombRadarPosition.x / mapData.width) * effectiveWidth + offsetX;
+    const scaledY =
+      (bombRadarPosition.y / mapData.height) * effectiveHeight + offsetY;
 
-      // Begin drawing player circle
-      context.beginPath();
-      context.arc(
-        playerPosition.x,
-        playerPosition.y,
-        Math.abs(dotSize),
-        0,
-        2 * Math.PI
-      );
+    return {
+      ...gameData.bomb,
+      position: {
+        ...bombRadarPosition,
+        x: scaledX,
+        y: scaledY,
+      },
+    };
+  }, [gameData, mapData, radarSize]);
 
-      if (isTeammate) {
-        if (radarTheme === "default") {
-          context.strokeStyle = color;
-          context.stroke();
-        } else {
-          context.fillStyle = color;
-          context.fill();
-        }
-      } else {
-        context.lineWidth = 3;
-        context.strokeStyle = "#666666";
-        context.stroke();
-        context.lineWidth = 1;
-        context.fillStyle = color;
-        context.fill();
-      }
+  const initPlayers = useCallback(() => {
+    if (!gameData || !mapData) return;
 
-      // Display important weapons on map
-      const importantWeapon = hasImportantWeapons(
-        settingsCtx.settings.player.importantWeapons,
-        player.weapons
-      );
-      context.beginPath();
-      context.font = "13px Verdana, sans-serif";
-      context.textAlign = "center";
-      context.shadowColor = "black";
-      context.shadowBlur = 1;
-      context.strokeStyle = "black";
-      context.strokeText(
-        importantWeapon,
-        playerPosition.x,
-        playerPosition.y + dotSize * 3
-      );
-      context.shadowColor = "";
-      context.shadowBlur = 0;
-      context.fillStyle = "#FFFFE0";
-      context.fillText(
-        importantWeapon,
-        playerPosition.x,
-        playerPosition.y + dotSize * 3
-      );
-    }
-  };
+    const { effectiveWidth, effectiveHeight, offsetX, offsetY } =
+      calculateRadarEffectiveDimensions(radarSize);
 
-  const drawMain = (context: CanvasRenderingContext2D) => {
-    context.reset();
+    const updatedPlayers = [gameData.local_player, ...gameData.players]
+      .filter(
+        (player) =>
+          player?.alive &&
+          player?.health &&
+          (player?.position.x || player?.position.y)
+      )
+      .map((player) => {
+        const viewDirection = getPlayerViewDirection(player.view_angles);
+        const playerRadarPosition = getRadarPosition(player.position, mapData);
 
-    if (currentMap === "" || currentMap === "<empty>") {
-      return;
-    }
+        const scaledX =
+          (playerRadarPosition.x / mapData.width) * effectiveWidth + offsetX;
+        const scaledY =
+          (playerRadarPosition.y / mapData.height) * effectiveHeight + offsetY;
 
-    if (!mapData) return;
+        const importantWeapon = hasImportantWeapons(
+          importantWeapons,
+          player.weapons
+        );
 
-    // Calculate scale based on the background canvas size
-    const scale = Math.min(
-      context.canvas.width / mapData.width,
-      context.canvas.height / mapData.height
-    );
+        return {
+          ...player,
+          position: {
+            ...playerRadarPosition,
+            x: scaledX,
+            y: scaledY,
+          },
+          importantWeapon,
+          viewDirection,
+        };
+      });
 
-    // Apply scaling to the context
-    context.scale(scale, scale);
+    setPlayers(updatedPlayers);
+  }, [gameData, mapData, radarSize, importantWeapons]);
 
-    // Calculate offset to center the radar elements
-    const offsetX = (context.canvas.width / scale - mapData.width) / 2;
-    const offsetY = (context.canvas.height / scale - mapData.height) / 2;
+  useEffect(() => {
+    initPlayers();
+  }, [initPlayers]);
 
-    // Save the current state to revert back later after applying transformations
-    context.save();
-    context.translate(offsetX, offsetY);
+  useEffect(() => {
+    const handleZoom = () => {
+      const zoom = window.devicePixelRatio || 1;
+      setZoomLevel(zoom);
+    };
 
-    drawPlayers(context);
-    drawBomb(context);
+    window.addEventListener("resize", handleZoom);
+    handleZoom();
 
-    // Restore the context state to avoid affecting other drawings
-    context.restore();
-  };
+    return () => {
+      window.removeEventListener("resize", handleZoom);
+    };
+  }, []);
 
-  return <Canvas className="absolute inset-0 mx-auto" draw={drawMain} />;
+  return (
+    <div id="radar-main" className="absolute inset-0 border-yellow-700">
+      {players.map((player, index) => {
+        const isTeammate = player.team === localPlayerTeam;
+        const dotColor =
+          radarTheme === "default"
+            ? PLAYER_COLORS[player.color]
+            : isTeammate
+              ? "#00ff00"
+              : "#ff0000";
+        const arrowColor =
+          radarTheme === "default" && !isTeammate ? "#ff0000" : null;
+
+        return (
+          <Fragment key={`player-radar-${player.index}`}>
+            <div
+              className="pointer-events-none absolute z-[1] select-none text-center"
+              style={{
+                left: `${player.position.x}px`,
+                top: `${player.position.y}px`,
+                transform: `translate(-50%, -50%) scale(${1 / zoomLevel})`,
+                transition:
+                  "left 0.2s ease, top 0.2s ease, transform 0.2s ease",
+              }}
+            >
+              {showHealth && !isTeammate && (
+                <div
+                  className="absolute z-[2] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]"
+                  style={{
+                    bottom: `${dotSize}px`,
+                    left: "50%",
+                    transform: `translate(-50%, -50%)`,
+                    fontVariant: "unicase",
+                  }}
+                >
+                  {player.health}
+                </div>
+              )}
+              <PlayerIcon
+                size={dotSize}
+                dotColor={dotColor}
+                {...(arrowColor && { arrowColor })}
+                className="z-[2]"
+                style={{
+                  transform: `rotate(${player.viewDirection}deg)`,
+                  transition: "transform 0.2s ease",
+                }}
+              />
+              {showWeapon && (
+                <div
+                  className="absolute z-[2] text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]"
+                  style={{
+                    top: `${dotSize}px`,
+                    left: "50%",
+                    transform: `translateX(-50%)`,
+                    fontVariant: "unicase",
+                  }}
+                >
+                  {player.importantWeapon}
+                </div>
+              )}
+            </div>
+          </Fragment>
+        );
+      })}
+
+      {bombInfo && (
+        <div
+          id="bomb"
+          className="pointer-events-none absolute z-[1] select-none"
+          style={{
+            left: `${bombInfo.position.x}px`,
+            top: `${bombInfo.position.y}px`,
+            transform: `translate(-50%, -50%) scale(${1 / zoomLevel})`,
+            transition: "left 0.2s ease, top 0.2s ease, transform 0.2s ease",
+          }}
+        >
+          <BombIcon size={16} className="text-[#FFD700]" />
+        </div>
+      )}
+    </div>
+  );
 }
+
+export default memo(RadarMain);

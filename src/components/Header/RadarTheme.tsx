@@ -1,26 +1,20 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
-import { SettingsContext } from "@/contexts/settings";
+import { useSettingsContext } from "@/lib/hooks/use-settings-context";
 
 export default function RadarTheme() {
   const radarThemeRef = useRef<HTMLDivElement>(null);
 
-  const settingsCtx = useContext(SettingsContext);
+  const { radarTheme, toggleRadarTheme } = useSettingsContext();
 
-  const handleRadarTheme = () => {
-    settingsCtx.toggleRadarTheme();
-    radarThemeRef.current?.setAttribute(
-      "data-radar-theme",
-      settingsCtx.radarTheme
-    );
-  };
+  const handleRadarTheme = useCallback(() => {
+    toggleRadarTheme();
+    radarThemeRef.current?.setAttribute("data-radar-theme", radarTheme);
+  }, [radarTheme, toggleRadarTheme]);
 
   useEffect(() => {
-    radarThemeRef.current?.setAttribute(
-      "data-radar-theme",
-      settingsCtx.radarTheme
-    );
-  }, [settingsCtx.radarTheme]);
+    radarThemeRef.current?.setAttribute("data-radar-theme", radarTheme);
+  }, [radarTheme]);
 
   return (
     <button

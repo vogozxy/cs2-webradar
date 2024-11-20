@@ -3,17 +3,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { type GameData } from "@/types/gameData";
-import { type MapData } from "@/types/mapData";
 
 import { GAME_DATA } from "@/constants/gameData";
+
+import { useMapData } from "@/lib/hooks/use-map-data";
 
 import { GameContext } from "@/contexts/game";
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [gameData, setGameData] = useState<GameData>(null);
-  const [mapData, setMapData] = useState<MapData>(null);
   const [currentMap, setCurrentMap] = useState<string>("");
   const [inMatch, setInMatch] = useState<boolean>(false);
+  const { mapData } = useMapData(currentMap);
 
   const connectToSSE = useCallback(() => {
     if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
@@ -32,7 +33,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       `${process.env.NEXT_PUBLIC_WEBRADAR_SSE_URL}`
     );
 
-    eventSource.onopen = (event: Event) => {
+    eventSource.onopen = (_event: Event) => {
       console.info("SSE connection has been established.");
     };
 
@@ -70,21 +71,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       eventSource?.close();
     };
   }, [connectToSSE]);
-
-  // Handle map change
-  // It will only fetch the map data if the map changes
-  useEffect(() => {
-    if (currentMap === "" || currentMap === "<empty>") {
-      setMapData(null);
-      return;
-    }
-
-    fetch(`/maps/${currentMap}/data.json`)
-      .then((response) => response.json())
-      .then((data) => {
-        setMapData(data);
-      });
-  }, [currentMap]);
 
   return (
     <GameContext.Provider

@@ -1,8 +1,9 @@
 import { PrimaryWeapon } from "@/types/weapon";
 
 export type PlayerSettings = {
+  showHealth: boolean;
+  showWeapon: boolean;
   dotSize: number;
-  viewAngleLength: number;
   importantWeapons: PrimaryWeapon[];
 };
 

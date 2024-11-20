@@ -1,9 +1,17 @@
+import { memo } from "react";
+
 import { PrimaryWeapon } from "@/types/weapon";
 
-export default function PlayerPrimaryWeapon({ weapon }: { weapon: number }) {
+type PlayerPrimaryWeaponProps = {
+  weapon: number;
+};
+
+function PlayerPrimaryWeapon({ weapon }: PlayerPrimaryWeaponProps) {
   return (
     <span className="relative text-right">
       {weapon ? PrimaryWeapon[weapon] : <>&ndash;</>}
     </span>
   );
 }
+
+export default memo(PlayerPrimaryWeapon);

@@ -15,23 +15,15 @@
 
   html,
   body {
-    @apply min-h-svh text-base lg:h-svh lg:max-h-svh;
+    @apply h-svh min-h-svh text-base;
   }
 
   body {
-    @apply flex max-w-full flex-col gap-2 bg-white p-2 text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200;
+    @apply bg-white p-1.5 text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200;
   }
 }
 
 @layer components {
-  .bg {
-    background-image: url(/assets/cs2.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: 165vh;
-    @apply shadow-light dark:shadow-dark;
-  }
-
   .react-select-container {
     @apply text-sm;
   }

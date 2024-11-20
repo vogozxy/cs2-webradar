@@ -1,26 +1,18 @@
-import React from "react";
+import React, { memo } from "react";
 
-export default function RangeSlider({
-  id,
-  onChange,
-  className,
+type RangeSliderProps = {
+  stepLabel?: boolean;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+function RangeSlider({
   min = 0,
   max = 50,
-  defaultValue,
   value,
+  defaultValue,
   step = 1,
   stepLabel = false,
-}: {
-  id?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string;
-  min?: number;
-  max?: number;
-  defaultValue?: number;
-  value?: number;
-  step?: number;
-  stepLabel?: boolean;
-}) {
+  ...props
+}: RangeSliderProps) {
   if (typeof value === "undefined" && typeof defaultValue === "undefined") {
     defaultValue = min;
   }
@@ -28,22 +20,20 @@ export default function RangeSlider({
   return (
     <>
       <input
-        id={id}
         type="range"
-        onChange={onChange}
-        className={className}
         min={min}
         max={max}
-        value={value}
         defaultValue={defaultValue}
+        value={value}
         step={step}
+        {...props}
       />
       {stepLabel && (
         <div className="flex items-center justify-between px-2 text-center">
           <span className="w-0 -translate-x-1 text-xs">{min}</span>
-          {[...Array(max - min - 1)].map((_, i) => (
+          {[...Array(+max - +min - 1)].map((_, i) => (
             <span key={i} className="text-xs">
-              {min + i + 1}
+              {+min + i + 1}
             </span>
           ))}
           <span className="w-0 -translate-x-2 text-xs">{max}</span>
@@ -52,3 +42,5 @@ export default function RangeSlider({
     </>
   );
 }
+
+export default memo(RangeSlider);

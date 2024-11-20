@@ -17,4 +17,4 @@ export type Bomb = {
   detonation_time: number;
   is_defusing: boolean;
   defuse_time: number;
-};
+} | null;
