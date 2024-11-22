@@ -12,7 +12,7 @@ import { PLAYER_COLORS } from "@/constants/player";
 import { useGameContext } from "@/lib/hooks/use-game-context";
 import { useSettingsContext } from "@/lib/hooks/use-settings-context";
 import { getRadarPosition } from "@/lib/radar";
-import { getPlayerViewDirection } from "@/lib/player";
+import { getPlayerRotationAngle } from "@/lib/player";
 import { hasImportantWeapons } from "@/lib/weapon";
 
 import { BombIcon, PlayerIcon } from "@/components/Icons";
@@ -47,7 +47,7 @@ const calculateRadarEffectiveDimensions = (radarSize: {
 
 type CustomPlayer = {
   importantWeapon: string;
-  viewDirection: number;
+  rotationAngle: number;
 } & Player;
 
 type RadarMainProps = {
@@ -59,6 +59,10 @@ type RadarMainProps = {
 
 function RadarMain({ radarSize }: RadarMainProps) {
   const [players, setPlayers] = useState<CustomPlayer[]>([]);
+  const [playerRotations, setPlayerRotations] = useState(
+    new Map<number, number>()
+  );
+
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const { gameData, mapData } = useGameContext();
   const { settings, radarTheme } = useSettingsContext();
@@ -103,6 +107,7 @@ function RadarMain({ radarSize }: RadarMainProps) {
     const { effectiveWidth, effectiveHeight, offsetX, offsetY } =
       calculateRadarEffectiveDimensions(radarSize);
 
+    const updatedPlayerRotations = new Map(playerRotations);
     const updatedPlayers = [gameData.local_player, ...gameData.players]
       .filter(
         (player) =>
@@ -111,7 +116,6 @@ function RadarMain({ radarSize }: RadarMainProps) {
           (player?.position.x || player?.position.y)
       )
       .map((player) => {
-        const viewDirection = getPlayerViewDirection(player.view_angles);
         const playerRadarPosition = getRadarPosition(player.position, mapData);
 
         const scaledX =
@@ -124,6 +128,14 @@ function RadarMain({ radarSize }: RadarMainProps) {
           player.weapons
         );
 
+        const previousRotation = updatedPlayerRotations.get(player.index) ?? 0;
+        const newRotation = getPlayerRotationAngle(
+          player.view_angles,
+          previousRotation
+        );
+
+        updatedPlayerRotations.set(player.index, newRotation);
+
         return {
           ...player,
           position: {
@@ -132,12 +144,13 @@ function RadarMain({ radarSize }: RadarMainProps) {
             y: scaledY,
           },
           importantWeapon,
-          viewDirection,
+          rotationAngle: newRotation,
         };
       });
 
     setPlayers(updatedPlayers);
-  }, [gameData, mapData, radarSize, importantWeapons]);
+    setPlayerRotations(updatedPlayerRotations);
+  }, [gameData, mapData, radarSize, importantWeapons, playerRotations]);
 
   useEffect(() => {
     initPlayers();
@@ -201,8 +214,8 @@ function RadarMain({ radarSize }: RadarMainProps) {
                 {...(arrowColor && { arrowColor })}
                 className="z-[2]"
                 style={{
-                  transform: `rotate(${player.viewDirection}deg)`,
-                  transition: "transform 0.2s ease",
+                  transform: `rotate(${player.rotationAngle}deg)`,
+                  transition: "transform 0.1s ease",
                 }}
               />
               {showWeapon && (
