@@ -21,7 +21,7 @@ export const playerHasBomb = (weapons: number[]) => {
   return weapons.includes(Misc.C4);
 };
 
-export const hasImportantWeapons = (
+export const getImportantWeapons = (
   importantWeapons: number[],
   weapons: number[]
 ): string => {

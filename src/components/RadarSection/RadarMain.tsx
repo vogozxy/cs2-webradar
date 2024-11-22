@@ -13,7 +13,7 @@ import { useGameContext } from "@/lib/hooks/use-game-context";
 import { useSettingsContext } from "@/lib/hooks/use-settings-context";
 import { getRadarPosition } from "@/lib/radar";
 import { getPlayerRotationAngle } from "@/lib/player";
-import { hasImportantWeapons } from "@/lib/weapon";
+import { getImportantWeapons } from "@/lib/weapon";
 
 import { BombIcon, PlayerIcon } from "@/components/Icons";
 
@@ -123,7 +123,7 @@ function RadarMain({ radarSize }: RadarMainProps) {
         const scaledY =
           (playerRadarPosition.y / mapData.height) * effectiveHeight + offsetY;
 
-        const importantWeapon = hasImportantWeapons(
+        const importantWeapon = getImportantWeapons(
           importantWeapons,
           player.weapons
         );
