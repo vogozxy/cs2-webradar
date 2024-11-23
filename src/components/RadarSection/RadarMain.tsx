@@ -68,11 +68,12 @@ function RadarMain({ radarSize }: RadarMainProps) {
     return gameData.local_player.team;
   }, [gameData]);
 
+  const { effectiveWidth, effectiveHeight, offsetX, offsetY } = useMemo(() => {
+    return calculateRadarEffectiveDimensions(radarSize);
+  }, [radarSize]);
+
   const bombInfo: Bomb = useMemo(() => {
     if (!gameData || !gameData.bomb || !mapData) return null;
-
-    const { effectiveWidth, effectiveHeight, offsetX, offsetY } =
-      calculateRadarEffectiveDimensions(radarSize);
 
     const bombRadarPosition = getRadarPosition(gameData.bomb.position, mapData);
 
@@ -89,13 +90,10 @@ function RadarMain({ radarSize }: RadarMainProps) {
         y: scaledY,
       },
     };
-  }, [gameData, mapData, radarSize]);
+  }, [gameData, mapData, effectiveWidth, effectiveHeight, offsetX, offsetY]);
 
   const players: CustomPlayer[] = useMemo(() => {
     if (!gameData || !mapData) return [];
-
-    const { effectiveWidth, effectiveHeight, offsetX, offsetY } =
-      calculateRadarEffectiveDimensions(radarSize);
 
     const players = [gameData.local_player, ...gameData.players]
       .filter(
@@ -144,7 +142,15 @@ function RadarMain({ radarSize }: RadarMainProps) {
       });
 
     return players;
-  }, [gameData, mapData, radarSize, importantWeapons]);
+  }, [
+    gameData,
+    mapData,
+    importantWeapons,
+    effectiveWidth,
+    effectiveHeight,
+    offsetX,
+    offsetY,
+  ]);
 
   useEffect(() => {
     const handleZoom = () => {
