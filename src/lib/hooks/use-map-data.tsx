@@ -2,12 +2,15 @@
 
 import useSWR from "swr";
 
-import { type MapData } from "@/types/mapData";
+import { type MapData } from "@/types/map";
 
 export const useMapData = (mapName: string) => {
   const { data, error, isLoading } = useSWR<MapData, Error>(
     () =>
-      mapName !== "" && mapName !== "<empty>" && `/maps/${mapName}/data.json`,
+      mapName !== "" &&
+      mapName !== "<empty>" &&
+      mapName !== "<unsupported>" &&
+      `/maps/${mapName}/data.json`,
     {
       revalidateOnFocus: false,
     }

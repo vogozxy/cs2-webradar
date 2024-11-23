@@ -3,7 +3,7 @@
 import { createContext } from "react";
 
 import { type GameData } from "@/types/gameData";
-import { type MapData } from "@/types/mapData";
+import { type MapData } from "@/types/map";
 
 interface IContext {
   gameData: GameData;

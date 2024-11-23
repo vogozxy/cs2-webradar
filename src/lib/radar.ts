@@ -1,4 +1,4 @@
-import type { MapData } from "@/types/mapData";
+import type { MapData } from "@/types/map";
 
 export const getRadarPosition = (
   position: { x: number; y: number; z: number },

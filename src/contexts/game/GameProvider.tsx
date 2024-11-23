@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { type GameData } from "@/types/gameData";
+import { Map } from "@/types/map";
 
 import { GAME_DATA } from "@/constants/gameData";
 
@@ -19,8 +20,11 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const connectToSSE = useCallback(() => {
     if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
       const gameData: GameData = GAME_DATA.de_mirage;
+      const mapName =
+        gameData?.map && gameData.map in Map ? gameData.map : "<unsupported>";
+
       setGameData(gameData);
-      setCurrentMap(gameData?.map ?? "");
+      setCurrentMap(mapName);
       setInMatch(
         (gameData?.map ?? null) !== null &&
           gameData?.map !== "" &&
@@ -40,8 +44,11 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     eventSource.onmessage = (event: MessageEvent) => {
       const gameData: GameData = JSON.parse(event?.data ?? null);
 
+      const mapName =
+        gameData?.map && gameData.map in Map ? gameData.map : "<unsupported>";
+
       setGameData(gameData);
-      setCurrentMap(gameData?.map ?? "");
+      setCurrentMap(mapName);
       setInMatch(
         (gameData?.map ?? null) !== null &&
           gameData?.map !== "" &&
