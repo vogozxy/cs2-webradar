@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-  memo,
-  Fragment,
-} from "react";
+import { useEffect, useState, useRef, useMemo, memo, Fragment } from "react";
 
 import { PLAYER_COLORS } from "@/constants/player";
 
@@ -58,10 +51,7 @@ type RadarMainProps = {
 };
 
 function RadarMain({ radarSize }: RadarMainProps) {
-  const [players, setPlayers] = useState<CustomPlayer[]>([]);
-  const [playerRotations, setPlayerRotations] = useState(
-    new Map<number, number>()
-  );
+  const playerRotationsRef = useRef<Map<number, number>>(new Map());
 
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const { gameData, mapData } = useGameContext();
@@ -101,22 +91,25 @@ function RadarMain({ radarSize }: RadarMainProps) {
     };
   }, [gameData, mapData, radarSize]);
 
-  const initPlayers = useCallback(() => {
-    if (!gameData || !mapData) return;
+  const players: CustomPlayer[] = useMemo(() => {
+    if (!gameData || !mapData) return [];
 
     const { effectiveWidth, effectiveHeight, offsetX, offsetY } =
       calculateRadarEffectiveDimensions(radarSize);
 
-    const updatedPlayerRotations = new Map(playerRotations);
-    const updatedPlayers = [gameData.local_player, ...gameData.players]
+    const players = [gameData.local_player, ...gameData.players]
       .filter(
         (player) =>
-          player?.alive &&
-          player?.health &&
-          (player?.position.x || player?.position.y)
+          player.alive &&
+          player.health &&
+          (player.position.x || player.position.y)
       )
       .map((player) => {
-        const playerRadarPosition = getRadarPosition(player.position, mapData);
+        const customPlayer = player as CustomPlayer;
+        const playerRadarPosition = getRadarPosition(
+          customPlayer.position,
+          mapData
+        );
 
         const scaledX =
           (playerRadarPosition.x / mapData.width) * effectiveWidth + offsetX;
@@ -125,19 +118,21 @@ function RadarMain({ radarSize }: RadarMainProps) {
 
         const importantWeapon = getImportantWeapons(
           importantWeapons,
-          player.weapons
+          customPlayer.weapons
         );
 
-        const previousRotation = updatedPlayerRotations.get(player.index) ?? 0;
+        const previousRotation =
+          playerRotationsRef.current.get(customPlayer.index) ?? 0;
+
         const newRotation = getPlayerRotationAngle(
-          player.view_angles,
+          customPlayer.view_angles,
           previousRotation
         );
 
-        updatedPlayerRotations.set(player.index, newRotation);
+        playerRotationsRef.current.set(customPlayer.index, newRotation);
 
         return {
-          ...player,
+          ...customPlayer,
           position: {
             ...playerRadarPosition,
             x: scaledX,
@@ -148,13 +143,8 @@ function RadarMain({ radarSize }: RadarMainProps) {
         };
       });
 
-    setPlayers(updatedPlayers);
-    setPlayerRotations(updatedPlayerRotations);
-  }, [gameData, mapData, radarSize, importantWeapons, playerRotations]);
-
-  useEffect(() => {
-    initPlayers();
-  }, [initPlayers]);
+    return players;
+  }, [gameData, mapData, radarSize, importantWeapons]);
 
   useEffect(() => {
     const handleZoom = () => {
@@ -192,7 +182,7 @@ function RadarMain({ radarSize }: RadarMainProps) {
                 top: `${player.position.y}px`,
                 transform: `translate(-50%, -50%) scale(${1 / zoomLevel})`,
                 transition:
-                  "left 0.2s ease, top 0.2s ease, transform 0.2s ease",
+                  "left 0.1s ease, top 0.1s ease, transform 0.1s ease",
               }}
             >
               {showHealth && !isTeammate && (
@@ -244,7 +234,7 @@ function RadarMain({ radarSize }: RadarMainProps) {
             left: `${bombInfo.position.x}px`,
             top: `${bombInfo.position.y}px`,
             transform: `translate(-50%, -50%) scale(${1 / zoomLevel})`,
-            transition: "left 0.2s ease, top 0.2s ease, transform 0.2s ease",
+            transition: "left 0.1s ease, top 0.1s ease, transform 0.1s ease",
           }}
         >
           <BombIcon size={16} className="text-[#FFD700]" />
