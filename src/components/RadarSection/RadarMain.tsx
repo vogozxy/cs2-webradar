@@ -73,7 +73,14 @@ function RadarMain({ radarSize }: RadarMainProps) {
   }, [radarSize]);
 
   const bombInfo: Bomb = useMemo(() => {
-    if (!gameData || !gameData.bomb || !mapData) return null;
+    if (
+      !gameData ||
+      !gameData.bomb ||
+      !gameData.bomb.position.x ||
+      !gameData.bomb.position.y ||
+      !mapData
+    )
+      return null;
 
     const bombRadarPosition = getRadarPosition(gameData.bomb.position, mapData);
 
