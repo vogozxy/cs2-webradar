@@ -11,7 +11,7 @@ export default function RadarBackground() {
         <Image
           src={`/maps/${currentMap}/radar.png`}
           alt="Map background"
-          style={{ objectFit: "contain" }}
+          className="object-contain"
           fill
           priority
         />
