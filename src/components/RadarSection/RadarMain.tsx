@@ -179,12 +179,16 @@ function RadarMain({ radarSize }: RadarMainProps) {
         const isTeammate = player.team === localPlayerTeam;
         const dotColor =
           radarTheme === "default"
-            ? PLAYER_COLORS[player.color]
+            ? isTeammate
+              ? PLAYER_COLORS[player.color]
+              : "#ff0000"
             : isTeammate
               ? "#00ff00"
               : "#ff0000";
         const arrowColor =
-          radarTheme === "default" && !isTeammate ? "#ff0000" : null;
+          radarTheme === "default" && !isTeammate
+            ? PLAYER_COLORS[player.color]
+            : null;
 
         return (
           <Fragment key={`player-radar-${player.index}`}>
