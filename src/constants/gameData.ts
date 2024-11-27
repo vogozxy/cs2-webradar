@@ -8,6 +8,7 @@ export const GAME_DATA: {
   empty: {
     local_player: {
       index: 1,
+      steamid3: 0,
       alive: false,
       nickname: "qiki",
       view_angles: {
@@ -44,6 +45,7 @@ export const GAME_DATA: {
     players: [
       {
         index: 2,
+        steamid3: 1,
         alive: false,
         nickname: "",
         view_angles: {
@@ -66,6 +68,7 @@ export const GAME_DATA: {
       },
       {
         index: 3,
+        steamid3: 2,
         alive: false,
         nickname: "",
         view_angles: {
@@ -88,6 +91,7 @@ export const GAME_DATA: {
       },
       {
         index: 4,
+        steamid3: 3,
         alive: false,
         nickname: "",
         view_angles: {
@@ -110,6 +114,7 @@ export const GAME_DATA: {
       },
       {
         index: 5,
+        steamid3: 4,
         alive: false,
         nickname: "",
         view_angles: {
@@ -132,6 +137,7 @@ export const GAME_DATA: {
       },
       {
         index: 7,
+        steamid3: 5,
         alive: false,
         nickname: "",
         view_angles: {
@@ -154,6 +160,7 @@ export const GAME_DATA: {
       },
       {
         index: 8,
+        steamid3: 6,
         alive: true,
         nickname: "",
         view_angles: {
@@ -176,6 +183,7 @@ export const GAME_DATA: {
       },
       {
         index: 9,
+        steamid3: 7,
         alive: true,
         nickname: "",
         view_angles: {
@@ -198,6 +206,7 @@ export const GAME_DATA: {
       },
       {
         index: 10,
+        steamid3: 8,
         alive: true,
         nickname: "",
         view_angles: {
@@ -220,6 +229,7 @@ export const GAME_DATA: {
       },
       {
         index: 11,
+        steamid3: 9,
         alive: false,
         nickname: ")\u0017\u0018񇚂�6P\u0013��q�p3\u0002�D�,�������+cAp�\u0004",
         view_angles: {
@@ -289,6 +299,7 @@ export const GAME_DATA: {
   de_mirage: {
     local_player: {
       nickname: "qiki",
+      steamid3: 0,
       team: 3,
       weapons: [60, 42, 43, 44],
       health: 35,
@@ -325,6 +336,7 @@ export const GAME_DATA: {
     players: [
       {
         nickname: "Pines",
+        steamid3: 1,
         team: 2,
         weapons: [59, 4, 11, 46, 45, 44, 43],
         health: 100,
@@ -347,6 +359,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Dios",
+        steamid3: 2,
         team: 2,
         weapons: [59, 4, 49, 46, 45, 44],
         health: 70,
@@ -369,6 +382,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Ulric",
+        steamid3: 3,
         team: 3,
         weapons: [42, 32, 9, 48, 47, 45, 43],
         health: 100,
@@ -391,6 +405,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Telsen",
+        steamid3: 4,
         team: 2,
         weapons: [59, 4, 39, 46, 45, 44, 43],
         health: 100,
@@ -413,6 +428,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Maru",
+        steamid3: 5,
         team: 3,
         weapons: [42, 32, 45, 47, 38],
         health: 100,
@@ -435,6 +451,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Conleth",
+        steamid3: 6,
         team: 3,
         weapons: [42, 32, 35, 48, 47, 45, 43],
         health: 100,
@@ -457,6 +474,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Bassey",
+        steamid3: 7,
         team: 2,
         weapons: [59, 4, 40, 46, 45, 44, 43],
         health: 100,
@@ -479,6 +497,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Azul",
+        steamid3: 8,
         team: 2,
         weapons: [59, 4, 28, 46, 45, 44, 43],
         health: 100,
@@ -501,6 +520,7 @@ export const GAME_DATA: {
       },
       {
         nickname: "Clarence",
+        steamid3: 9,
         team: 3,
         weapons: [42, 32, 25, 48, 47, 45, 43],
         health: 100,
@@ -526,6 +546,7 @@ export const GAME_DATA: {
   de_vertigo: {
     local_player: {
       color: 1,
+      steamid3: 0,
       money: 800,
       weapons: [60, 42, 43, 44],
       armor: 100,
@@ -562,6 +583,7 @@ export const GAME_DATA: {
     players: [
       {
         color: 0,
+        steamid3: 1,
         money: 800,
         weapons: [59, 4, 11, 46, 45, 44, 43],
         armor: 90,
@@ -584,6 +606,7 @@ export const GAME_DATA: {
       },
       {
         color: 0,
+        steamid3: 2,
         money: 800,
         weapons: [59, 4, 49, 46, 45, 44],
         armor: 100,
@@ -606,6 +629,7 @@ export const GAME_DATA: {
       },
       {
         color: 3,
+        steamid3: 3,
         money: 800,
         weapons: [42, 32, 9, 48, 47, 45, 43],
         armor: 0,
@@ -628,6 +652,7 @@ export const GAME_DATA: {
       },
       {
         color: 2,
+        steamid3: 4,
         money: 800,
         weapons: [59, 4, 39, 46, 45, 44, 43],
         armor: 0,
@@ -650,6 +675,7 @@ export const GAME_DATA: {
       },
       {
         color: 4,
+        steamid3: 5,
         money: 800,
         weapons: [42, 32, 45, 47, 38],
         armor: 100,
@@ -672,6 +698,7 @@ export const GAME_DATA: {
       },
       {
         color: 3,
+        steamid3: 6,
         money: 800,
         weapons: [42, 32, 35, 48, 47, 45, 43],
         armor: 100,
@@ -694,6 +721,7 @@ export const GAME_DATA: {
       },
       {
         color: 4,
+        steamid3: 7,
         money: 800,
         weapons: [59, 4, 40, 46, 45, 44, 43],
         armor: 100,
@@ -716,6 +744,7 @@ export const GAME_DATA: {
       },
       {
         color: 2,
+        steamid3: 8,
         money: 800,
         weapons: [59, 4, 28, 46, 45, 44, 43],
         armor: 100,
@@ -738,6 +767,7 @@ export const GAME_DATA: {
       },
       {
         color: 1,
+        steamid3: 9,
         money: 800,
         weapons: [42, 32, 25, 48, 47, 45, 43],
         armor: 0,
