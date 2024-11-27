@@ -20,7 +20,7 @@ export default function Home() {
           <main className="h-full space-y-1.5 lg:flex lg:flex-col lg:gap-1.5 lg:space-y-0">
             <BombSection />
             <div className="h-full lg:flex lg:flex-row-reverse lg:gap-1.5">
-              <RadarSection className="relative h-full rounded-lg bg-black/5 lg:w-3/5 dark:bg-white/5" />
+              <RadarSection className="relative h-full overflow-hidden rounded-lg bg-black/5 lg:w-3/5 dark:bg-white/5" />
               <div className="py-1.5 lg:w-2/5">
                 <Header />
                 <PlayersSection />

@@ -14,26 +14,26 @@ import { Player } from "@/types/player";
 import { Team } from "@/types/team";
 import { Bomb } from "@/types/bomb";
 
-const calculateRadarEffectiveDimensions = (radarSize: {
+const calculateRadarEffectiveDimensions = (radar: {
   width: number;
   height: number;
 }) => {
   const aspectRatio = 1024 / 1024; // Aspect ratio of the radar image
-  const containerAspectRatio = radarSize.width / radarSize.height;
+  const containerAspectRatio = radar.width / radar.height;
 
-  let effectiveWidth = radarSize.width;
-  let effectiveHeight = radarSize.height;
+  let effectiveWidth = radar.width;
+  let effectiveHeight = radar.height;
 
   if (containerAspectRatio > aspectRatio) {
     // Container is wider than the image aspect ratio
-    effectiveWidth = radarSize.height * aspectRatio;
+    effectiveWidth = radar.height * aspectRatio;
   } else {
     // Container is taller than the image aspect ratio
-    effectiveHeight = radarSize.width / aspectRatio;
+    effectiveHeight = radar.width / aspectRatio;
   }
 
-  const offsetX = (radarSize.width - effectiveWidth) / 2;
-  const offsetY = (radarSize.height - effectiveHeight) / 2;
+  const offsetX = (radar.width - effectiveWidth) / 2;
+  const offsetY = (radar.height - effectiveHeight) / 2;
 
   return { effectiveWidth, effectiveHeight, offsetX, offsetY };
 };
@@ -44,13 +44,15 @@ type CustomPlayer = {
 } & Player;
 
 type RadarMainProps = {
-  radarSize: {
+  radar: {
     width: number;
     height: number;
+    rotation: number;
+    scaleFactor: number;
   };
 };
 
-function RadarMain({ radarSize }: RadarMainProps) {
+function RadarMain({ radar }: RadarMainProps) {
   const playerRotationsRef = useRef<Map<number, number>>(new Map());
 
   const [zoomLevel, setZoomLevel] = useState<number>(1);
@@ -69,8 +71,11 @@ function RadarMain({ radarSize }: RadarMainProps) {
   }, [gameData]);
 
   const { effectiveWidth, effectiveHeight, offsetX, offsetY } = useMemo(() => {
-    return calculateRadarEffectiveDimensions(radarSize);
-  }, [radarSize]);
+    return calculateRadarEffectiveDimensions({
+      width: radar.width,
+      height: radar.height,
+    });
+  }, [radar.width, radar.height]);
 
   const bombInfo: Bomb = useMemo(() => {
     if (
@@ -174,8 +179,14 @@ function RadarMain({ radarSize }: RadarMainProps) {
   }, []);
 
   return (
-    <div id="radar-main" className="absolute inset-0 border-yellow-700">
-      {players.map((player, index) => {
+    <div
+      id="radar-main"
+      className="absolute inset-0 border-yellow-700"
+      style={{
+        transform: `rotate(${radar.rotation}deg) scale(${radar.scaleFactor})`,
+      }}
+    >
+      {players.map((player) => {
         const isTeammate = player.team === localPlayerTeam;
         const dotColor =
           radarTheme === "default"

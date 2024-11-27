@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useEffect, useMemo } from "react";
+import React, { useCallback, useState, useEffect } from "react";
+import Link from "next/link";
 import Select from "react-select";
 
 import { PrimaryWeapon } from "@/types/weapon";
@@ -33,6 +34,14 @@ export default function SettingsSection() {
     settings.player.showWeapon
   );
 
+  const [playerMapRotation, setPlayerMapRotation] = useState<boolean>(
+    settings.player.mapRotation
+  );
+
+  const [playerSteamId64, setPlayerSteamId64] = useState<string>(
+    settings.player.steamId64
+  );
+
   const [playerDotSize, setPlayerDotSize] = useState<number>(
     settings.player.dotSize
   );
@@ -63,6 +72,17 @@ export default function SettingsSection() {
     setShowPlayerWeapon((weapon) => !weapon);
   }, []);
 
+  const togglePlayerMapRotation = useCallback(() => {
+    setPlayerMapRotation((rotation) => !rotation);
+  }, []);
+
+  const handlePlayerSteamId64 = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setPlayerSteamId64((event.target as HTMLInputElement).value);
+    },
+    []
+  );
+
   const handlePlayerDotSize = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const dotSize =
@@ -92,6 +112,8 @@ export default function SettingsSection() {
         ...settings.player,
         showHealth: showPlayerHealth,
         showWeapon: showPlayerWeapon,
+        mapRotation: playerMapRotation,
+        steamId64: playerSteamId64,
         dotSize: playerDotSize,
         importantWeapons: playerImportantWeapons,
       },
@@ -99,6 +121,8 @@ export default function SettingsSection() {
   }, [
     showPlayerHealth,
     showPlayerWeapon,
+    playerMapRotation,
+    playerSteamId64,
     playerDotSize,
     playerImportantWeapons,
     settings,
@@ -108,6 +132,8 @@ export default function SettingsSection() {
   const handleRestoreDefaults = useCallback(() => {
     setShowPlayerHealth(DEFAULT_PLAYER_SETTINGS.showHealth);
     setShowPlayerWeapon(DEFAULT_PLAYER_SETTINGS.showWeapon);
+    setPlayerMapRotation(DEFAULT_PLAYER_SETTINGS.mapRotation);
+    setPlayerSteamId64(DEFAULT_PLAYER_SETTINGS.steamId64);
     setPlayerDotSize(DEFAULT_PLAYER_SETTINGS.dotSize);
     setPlayerImportantWeapons(DEFAULT_PLAYER_SETTINGS.importantWeapons);
   }, []);
@@ -116,11 +142,15 @@ export default function SettingsSection() {
     showSettingsMenu(false);
     setShowPlayerHealth(settings.player.showHealth);
     setShowPlayerWeapon(settings.player.showWeapon);
+    setPlayerMapRotation(settings.player.mapRotation);
+    setPlayerSteamId64(settings.player.steamId64);
     setPlayerDotSize(settings.player.dotSize);
     setPlayerImportantWeapons(settings.player.importantWeapons);
   }, [
     settings.player.showHealth,
     settings.player.showWeapon,
+    settings.player.mapRotation,
+    settings.player.steamId64,
     settings.player.dotSize,
     settings.player.importantWeapons,
     showSettingsMenu,
@@ -174,7 +204,7 @@ export default function SettingsSection() {
                       onClick={togglePlayerHealth}
                       readOnly
                     />
-                    <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                    <div className="peer relative h-6 w-11 rounded-full bg-zinc-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-zinc-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:bg-zinc-900 dark:after:border-zinc-600 dark:peer-focus:ring-blue-800"></div>
                     <span className="ms-3 text-sm font-medium">Health</span>
                   </label>
 
@@ -187,7 +217,7 @@ export default function SettingsSection() {
                       onClick={togglePlayerWeapon}
                       readOnly
                     />
-                    <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                    <div className="peer relative h-6 w-11 rounded-full bg-zinc-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-zinc-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:bg-zinc-900 dark:after:border-zinc-600 dark:peer-focus:ring-blue-800"></div>
                     <span className="ms-3 text-sm font-medium">Weapon</span>
                   </label>
                 </div>
@@ -203,7 +233,7 @@ export default function SettingsSection() {
                 <RangeSlider
                   id="settings-player-dot-size"
                   onChange={handlePlayerDotSize}
-                  className="mb-1 mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 focus:outline-blue-700 dark:bg-gray-700"
+                  className="mb-1 mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 focus:outline-blue-700 dark:bg-zinc-900"
                   min={12}
                   max={20}
                   value={playerDotSize}
@@ -231,6 +261,52 @@ export default function SettingsSection() {
                     className="react-select-container"
                     classNamePrefix="react-select"
                   />
+                )}
+              </div>
+              <div className="col-span-2">
+                <label className="mb-2 block text-sm font-medium">
+                  Map Rotation
+                </label>
+
+                <label className="mb-2 inline-flex cursor-pointer items-center align-middle">
+                  <input
+                    className="peer sr-only"
+                    type="checkbox"
+                    value="player-map-rotation"
+                    checked={playerMapRotation}
+                    onClick={togglePlayerMapRotation}
+                    readOnly
+                  />
+                  <div className="peer relative h-6 w-11 rounded-full bg-zinc-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-zinc-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:bg-zinc-900 dark:after:border-zinc-600 dark:peer-focus:ring-blue-800"></div>
+                  <span className="ms-3 text-sm font-medium">Enable</span>
+                </label>
+
+                {playerMapRotation && (
+                  <>
+                    <input
+                      type="text"
+                      className="block w-full rounded border border-zinc-300 bg-zinc-50 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500  dark:border-zinc-600 dark:bg-zinc-900 dark:placeholder-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                      placeholder="Your SteamID64 (e.g 76561197960287930)"
+                      value={playerSteamId64}
+                      onChange={handlePlayerSteamId64}
+                      disabled={!playerMapRotation}
+                    />
+
+                    <p
+                      id="steamid-helper-text"
+                      className="mt-2 text-sm text-gray-500 dark:text-gray-400"
+                    >
+                      You can find your SteamID64{" "}
+                      <Link
+                        href="https://steamid.io/lookup/"
+                        className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                        target="_blank"
+                      >
+                        here
+                      </Link>
+                      .
+                    </p>
+                  </>
                 )}
               </div>
             </div>

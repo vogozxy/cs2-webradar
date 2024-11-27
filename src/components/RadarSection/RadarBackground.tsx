@@ -1,12 +1,28 @@
+import { memo } from "react";
 import Image from "next/image";
 
 import { useGameContext } from "@/lib/hooks/use-game-context";
 
-export default function RadarBackground() {
+type RadarBackgroundProps = {
+  radar: {
+    width: number;
+    height: number;
+    rotation: number;
+    scaleFactor: number;
+  };
+};
+
+function RadarBackground({ radar }: RadarBackgroundProps) {
   const { currentMap } = useGameContext();
 
   return (
-    <div id="radar-background" className="absolute inset-0 border-red-700">
+    <div
+      id="radar-background"
+      className="absolute inset-0 border-red-700"
+      style={{
+        transform: `rotate(${radar.rotation}deg) scale(${radar.scaleFactor})`,
+      }}
+    >
       {currentMap !== "<unsupported>" ? (
         <Image
           src={`/maps/${currentMap}/radar.png`}
@@ -30,3 +46,5 @@ export default function RadarBackground() {
     </div>
   );
 }
+
+export default memo(RadarBackground);

@@ -4,6 +4,8 @@ import { PrimaryWeapon } from "@/types/weapon";
 export const DEFAULT_PLAYER_SETTINGS: PlayerSettings = {
   showHealth: true,
   showWeapon: true,
+  mapRotation: false,
+  steamId64: "",
   dotSize: 12,
   importantWeapons: [
     PrimaryWeapon.AWP,

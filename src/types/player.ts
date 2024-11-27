@@ -13,6 +13,7 @@ export type PlayerViewAngles = {
 
 export type Player = {
   index: number;
+  steamid3: number;
   alive: boolean;
   color: number;
   nickname: string;

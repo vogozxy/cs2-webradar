@@ -15,7 +15,7 @@ export default function Home() {
       {inMatch ? (
         <main className="h-full space-y-1.5 lg:flex lg:flex-col lg:gap-1.5 lg:space-y-0">
           <BombSection />
-          <RadarSection className="relative h-full rounded-lg bg-black/5 dark:bg-white/5" />
+          <RadarSection className="relative h-full overflow-hidden rounded-lg bg-black/5 dark:bg-white/5" />
         </main>
       ) : (
         <>
