@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, Fragment } from "react";
+import { ReactNode, Fragment, Suspense } from "react";
 import { SWRConfig } from "swr";
 
 import { SettingsProvider } from "@/contexts/settings";
@@ -21,7 +21,9 @@ export default function Providers({ children }: ProvidersProps) {
         }}
       >
         <SettingsProvider>
-          <GameProvider>{children}</GameProvider>
+          <Suspense>
+            <GameProvider>{children}</GameProvider>
+          </Suspense>
         </SettingsProvider>
       </SWRConfig>
     </Fragment>
