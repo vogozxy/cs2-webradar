@@ -221,6 +221,7 @@ function RadarMain({ radar }: RadarMainProps) {
                     left: "50%",
                     transform: `translate(-50%, -50%)`,
                     fontVariant: "unicase",
+                    fontSize: `calc(${dotSize * 1.125}px + 1.125vw)`,
                   }}
                 >
                   {player.health}
@@ -244,6 +245,7 @@ function RadarMain({ radar }: RadarMainProps) {
                     left: "50%",
                     transform: `translateX(-50%)`,
                     fontVariant: "unicase",
+                    fontSize: `calc(${dotSize * 1.125}px + 1.125vw)`,
                   }}
                 >
                   {player.importantWeapon}
