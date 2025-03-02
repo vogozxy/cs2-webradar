@@ -23,7 +23,9 @@ export type Player = {
   has_helmet: boolean;
   money: number;
   weapons: number[];
+  has_bomb: boolean;
   has_defuser: boolean;
+  flash_alpha: number;
   position: PlayerPosition;
   view_angles: PlayerViewAngles;
 };

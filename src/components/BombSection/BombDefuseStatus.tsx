@@ -8,7 +8,7 @@ import { useGameContext } from "@/lib/hooks/use-game-context";
 export default function BombDefuseStatus() {
   const { gameData } = useGameContext();
 
-  const isDefusing = gameData?.bomb?.is_defusing ?? false;
+  const isDefusing = gameData?.bomb?.state === "defusing";
   const detonationTime = gameData?.bomb?.detonation_time ?? 0;
   const defuseTime = gameData?.bomb?.defuse_time ?? 0;
 

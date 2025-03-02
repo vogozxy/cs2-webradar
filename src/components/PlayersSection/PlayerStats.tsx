@@ -77,7 +77,7 @@ function PlayerStats({
               <circle cx="10" cy="10" r="5" />
             </svg>
           </span>{" "}
-          {nickname}
+          {decodeURIComponent(nickname)}
         </span>
         <PlayerPrimaryWeapon weapon={playerStats.primaryWeapon} />
       </div>

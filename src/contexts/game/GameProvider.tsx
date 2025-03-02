@@ -7,8 +7,6 @@ import { io } from "socket.io-client";
 import { type GameData } from "@/types/gameData";
 import { Map } from "@/types/map";
 
-import { GAME_DATA } from "@/constants/gameData";
-
 import { useMapData } from "@/lib/hooks/use-map-data";
 
 import { GameContext } from "@/contexts/game";
@@ -23,21 +21,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const useSocketConnection = searchParams.has("socket");
 
   const connectToSSE = useCallback(() => {
-    if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
-      const gameData: GameData = GAME_DATA.de_mirage;
-      const mapName =
-        gameData?.map && gameData.map in Map ? gameData.map : "<unsupported>";
-
-      setGameData(gameData);
-      setCurrentMap(mapName);
-      setInMatch(
-        (gameData?.map ?? null) !== null &&
-          gameData?.map !== "" &&
-          gameData?.map !== "<empty>"
-      );
-      return;
-    }
-
     const eventSource = new EventSource(
       `${process.env.NEXT_PUBLIC_WEBRADAR_HTTP}${process.env.NEXT_PUBLIC_WEBRADAR_SSE_ENDPOINT}`
     );
@@ -76,21 +59,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const connectToSocket = useCallback(() => {
-    if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
-      const gameData: GameData = GAME_DATA.de_mirage;
-      const mapName =
-        gameData?.map && gameData.map in Map ? gameData.map : "<unsupported>";
-
-      setGameData(gameData);
-      setCurrentMap(mapName);
-      setInMatch(
-        (gameData?.map ?? null) !== null &&
-          gameData?.map !== "" &&
-          gameData?.map !== "<empty>"
-      );
-      return;
-    }
-
     const socket = io(`${process.env.NEXT_PUBLIC_WEBRADAR_SOCKET}`, {
       path: `${process.env.NEXT_PUBLIC_WEBRADAR_SOCKET_ENDPOINT}`,
     });

@@ -11,10 +11,15 @@ export type BombPosition = {
 };
 
 export type Bomb = {
+  state:
+    | "carried"
+    | "planted"
+    | "exploded"
+    | "defused"
+    | "defusing"
+    | "dropped";
   position: BombPosition;
-  is_planted: boolean;
   site: "A" | "B" | "";
   detonation_time: number;
-  is_defusing: boolean;
   defuse_time: number;
 } | null;
