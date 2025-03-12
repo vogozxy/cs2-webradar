@@ -12,3 +12,12 @@ export const fetcher = async <JSON = any>(
   const res = await fetch(input, init);
   return res.json();
 };
+
+export const safeDecodeURIComponent = (str: string): string => {
+  try {
+    return decodeURIComponent(str);
+  } catch (error) {
+    console.error("Failed to decode URI component:", str, error);
+    return "-";
+  }
+};

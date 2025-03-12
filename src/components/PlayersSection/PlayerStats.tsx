@@ -10,7 +10,7 @@ import {
   getNades,
   playerHasBomb,
 } from "@/lib/weapon";
-import { cn } from "@/lib/utils";
+import { cn, safeDecodeURIComponent } from "@/lib/utils";
 
 import PlayerPrimaryWeapon from "./PlayerPrimaryWeapon";
 import PlayerSecondaryWeapon from "./PlayerSecondaryWeapon";
@@ -77,7 +77,7 @@ function PlayerStats({
               <circle cx="10" cy="10" r="5" />
             </svg>
           </span>{" "}
-          {decodeURIComponent(nickname)}
+          {safeDecodeURIComponent(nickname)}
         </span>
         <PlayerPrimaryWeapon weapon={playerStats.primaryWeapon} />
       </div>
