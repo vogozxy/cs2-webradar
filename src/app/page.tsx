@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 
 import { useGameContext } from "@/lib/hooks/use-game-context";
+import { useWakeLock } from "@/lib/hooks/use-wake-lock";
 
 import Header from "@/components/Header";
 import BombSection from "@/components/BombSection";
@@ -12,6 +14,20 @@ import SettingsSection from "@/components/SettingsSection";
 
 export default function Home() {
   const { inMatch } = useGameContext();
+
+  const { isSupported, request, release } = useWakeLock({
+    reacquireOnPageVisible: true,
+  });
+
+  useEffect(() => {
+    if (!isSupported) return;
+
+    request();
+
+    return () => {
+      release();
+    };
+  }, [isSupported, request, release]);
 
   return (
     <>
