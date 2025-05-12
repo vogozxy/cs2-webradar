@@ -23,4 +23,9 @@ export enum Map {
   de_overpass = "de_overpass",
   de_train = "de_train",
   de_vertigo = "de_vertigo",
+  de_jura = "de_jura",
+  de_grail = "de_grail",
+  cs_agency = "cs_agency",
+  de_dogtown = "de_dogtown",
+  de_brewery = "de_brewery",
 }

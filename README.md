@@ -2,7 +2,7 @@
 
 ![Webradar Preview](./docs/gif/webradar-dark.gif?raw=true)
 
-Supported maps: `italy, office, ancient, anubis, basalt, dust2, edin, inferno, mirage, nuke, overpass, train, vertigo`.
+Supported maps: `italy, office, ancient, anubis, basalt, dust2, edin, inferno, mirage, nuke, overpass, train, vertigo, jura, grail, agency, dogtown, brewery`.
 
 ## Getting Started
 
