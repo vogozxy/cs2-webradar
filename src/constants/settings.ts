@@ -7,6 +7,7 @@ export const DEFAULT_PLAYER_SETTINGS: PlayerSettings = {
   mapRotation: false,
   steamId64: "",
   dotSize: 12,
+  labelSize: 16,
   importantWeapons: [
     PrimaryWeapon.AWP,
     PrimaryWeapon.G3SG1,

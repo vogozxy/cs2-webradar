@@ -62,6 +62,7 @@ function RadarMain({ radar }: RadarMainProps) {
   const showHealth = settings.player.showHealth;
   const showWeapon = settings.player.showWeapon;
   const dotSize = settings.player.dotSize;
+  const labelSize = settings.player.labelSize;
   const importantWeapons = settings.player.importantWeapons;
 
   const localPlayerTeam = useMemo(() => {
@@ -221,7 +222,7 @@ function RadarMain({ radar }: RadarMainProps) {
                     left: "50%",
                     transform: `translate(-50%, -50%)`,
                     fontVariant: "unicase",
-                    fontSize: `clamp(${dotSize * 0.8}px, ${dotSize}px + 1vw, ${dotSize * 1.2}px)`,
+                    fontSize: `${labelSize}px`,
                   }}
                 >
                   {player.health}
@@ -245,7 +246,7 @@ function RadarMain({ radar }: RadarMainProps) {
                     left: "50%",
                     transform: `translateX(-50%)`,
                     fontVariant: "unicase",
-                    fontSize: `clamp(${dotSize * 0.8}px, ${dotSize}px + 1vw, ${dotSize * 1.2}px)`,
+                    fontSize: `${labelSize}px`,
                   }}
                 >
                   {player.importantWeapon}

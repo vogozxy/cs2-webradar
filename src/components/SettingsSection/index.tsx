@@ -46,6 +46,10 @@ export default function SettingsSection() {
     settings.player.dotSize
   );
 
+  const [playerLabelSize, setPlayerLabelSize] = useState<number>(
+    settings.player.labelSize
+  );
+
   const [playerImportantWeapons, setPlayerImportantWeapons] = useState<
     number[]
   >(settings.player.importantWeapons);
@@ -94,6 +98,17 @@ export default function SettingsSection() {
     [settings.player.dotSize]
   );
 
+  const handlePlayerLabelSize = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const labelSize =
+        parseInt((event.target as HTMLInputElement).value) ||
+        settings.player.labelSize;
+
+      setPlayerLabelSize(labelSize);
+    },
+    [settings.player.labelSize]
+  );
+
   const handlePlayerImportantWeapons = useCallback(
     (option: readonly SelectOption[]) => {
       const importantWeapons: number[] = option
@@ -115,6 +130,7 @@ export default function SettingsSection() {
         mapRotation: playerMapRotation,
         steamId64: playerSteamId64,
         dotSize: playerDotSize,
+        labelSize: playerLabelSize,
         importantWeapons: playerImportantWeapons,
       },
     });
@@ -124,6 +140,7 @@ export default function SettingsSection() {
     playerMapRotation,
     playerSteamId64,
     playerDotSize,
+    playerLabelSize,
     playerImportantWeapons,
     settings,
     updateSettings,
@@ -135,6 +152,7 @@ export default function SettingsSection() {
     setPlayerMapRotation(DEFAULT_PLAYER_SETTINGS.mapRotation);
     setPlayerSteamId64(DEFAULT_PLAYER_SETTINGS.steamId64);
     setPlayerDotSize(DEFAULT_PLAYER_SETTINGS.dotSize);
+    setPlayerLabelSize(DEFAULT_PLAYER_SETTINGS.labelSize);
     setPlayerImportantWeapons(DEFAULT_PLAYER_SETTINGS.importantWeapons);
   }, []);
 
@@ -145,6 +163,7 @@ export default function SettingsSection() {
     setPlayerMapRotation(settings.player.mapRotation);
     setPlayerSteamId64(settings.player.steamId64);
     setPlayerDotSize(settings.player.dotSize);
+    setPlayerLabelSize(settings.player.labelSize);
     setPlayerImportantWeapons(settings.player.importantWeapons);
   }, [
     settings.player.showHealth,
@@ -152,6 +171,7 @@ export default function SettingsSection() {
     settings.player.mapRotation,
     settings.player.steamId64,
     settings.player.dotSize,
+    settings.player.labelSize,
     settings.player.importantWeapons,
     showSettingsMenu,
   ]);
@@ -238,6 +258,25 @@ export default function SettingsSection() {
                   max={20}
                   value={playerDotSize}
                   stepLabel
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label
+                  htmlFor="settings-player-label-size"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Player Label Size
+                </label>
+
+                <input
+                  type="text"
+                  pattern="[0-9]*"
+                  id="settings-player-label-size"
+                  className="block w-full rounded border border-zinc-300 bg-zinc-50 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500  dark:border-zinc-600 dark:bg-zinc-900 dark:placeholder-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  placeholder="Player label size"
+                  value={playerLabelSize}
+                  onChange={handlePlayerLabelSize}
                 />
               </div>
 

@@ -6,6 +6,7 @@ export type PlayerSettings = {
   mapRotation: boolean;
   steamId64: string;
   dotSize: number;
+  labelSize: number;
   importantWeapons: PrimaryWeapon[];
 };
 
